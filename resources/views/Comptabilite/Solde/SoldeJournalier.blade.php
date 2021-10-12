@@ -24,9 +24,8 @@
                                   <div class="row">
 
                                          <div class="col-12">
-                                          <form method="POST" action=" {{route('getSolde')}}">  
+                         <!--                  <form method="POST" action=" {{route('getSolde')}}">  
                                           {{ csrf_field() }}
-                                         
                                             <div class="row">
                                               <input type="text" name="sc_compte" id="sc_compte" style="display: none;">
 
@@ -53,15 +52,13 @@
                                                  </div> 
                                               </div>
 
-                                 <div class="col-2">
+                                              <div class="col-2">
                                                   <div class="form-group">
                                                    <button style="margin-top: 30px;" type="submit" class="form-control btn btn-success">Filtrer</button>
                                                  </div> 
                                               </div>
-                                           
                                           </div>
-                                              
-                                           </form> 
+                                      </form>  -->
 
                                            <div class="col-4"><a href="javascript:void(0)" data-toggle="modal" data-target="#add-new-event" class="btn m-t-20 btn-info btn-block waves-effect waves-light">
                                             <i class="ti-plus"></i>Solder.
@@ -80,7 +77,6 @@
                                                 <th>Date Operation</th>
                                                 <th>Transferer Au</th>
                                                 <th>Montants</th>
-                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -89,8 +85,7 @@
                                                 <td><a href="{{route('solde_detail', [$Solde->id,$Solde->dateOperation])}}">{{$Solde->NumeroCompte}}{{$Solde->Intitule}}</a></td>
                                                 <td>{{$Solde->dateOperation}}</td>
                                                 <td>{{$Solde->repporterAu}}</td>
-                                                <td>{{$Solde->montant}}</td>
-                                                <td></td>
+                                                <td><?php echo number_format($Solde->montant,session()->get('ExerciceNbreDecimal'),session()->get('ExerciceSeparateurDecimal'),session()->get('ExerciceseparateurMilieu')).' '.session()->get('ExerciceDevise')?></td>
                                               </tr>
                                             @endforeach
                                         </tbody>
@@ -106,7 +101,7 @@
             </div>
            
             
-                                 <!-- Modal Add Category -->
+            <!-- Modal Add Category -->
                 <div class="modal fade none-border" id="add-new-event">
                     <div class="modal-dialog">
                         <div class="modal-content">

@@ -94,7 +94,9 @@ class SoldejournalierController extends Controller
      */
     public function destroy($id)
     {
-        //
+       $Solde = soldeJournalier::findOrFail($id); 
+       $Solde->destroy($id);
+       return back();
     }
 
     public function soldeJournalierForm(){
@@ -124,6 +126,7 @@ class SoldejournalierController extends Controller
     }
 
     public function SoldeJournalier(){
+        $Today = date('Y-m-d');
         $ComptePrincipals = ComptePrincipal::whereEtatAndSoldejournalier(0,1)->get();
         $Scomptes =DB::table('compte_principals')
                   ->join('compte_subdivisionnaires', 'compte_subdivisionnaires.ComptePricipal', '=', 'compte_principals.id')
@@ -135,6 +138,8 @@ class SoldejournalierController extends Controller
         $Soldes = DB::table('compte_subdivisionnaires')
                 ->join('solde_journaliers', 'solde_journaliers.Comptesudb', '=', 'compte_subdivisionnaires.id')
                 ->select(DB::raw('compte_subdivisionnaires.id, compte_subdivisionnaires.NumeroCompte, compte_subdivisionnaires.Intitule,solde_journaliers.dateOperation,solde_journaliers.repporterAu,sum(solde_journaliers.montant) as montant'))
+                ->where('solde_journaliers.dateOperation',$Today)
+                ->orWhere('solde_journaliers.repporterAu',$Today)
                 ->groupBy('compte_subdivisionnaires.id')
                 ->groupBy('solde_journaliers.dateOperation')
                 ->get();
@@ -142,14 +147,15 @@ class SoldejournalierController extends Controller
     }
 
     public function getSolde(Request $request){
-             
+        $MontantMD = Journal::whereCompteAndSousCompteAndDateoperation($request->Compte,$request->sc_compte1,$request->SoldeOutcome)->sum('MD');
+        $MontantMC = Journal::whereCompteAndSousCompteAndDateoperation($request->Compte,$request->sc_compte1,$request->SoldeOutcome)->sum('MC');
     }
 
     public function solde_detail($id, $periode){
         $Soldes = DB::table('compte_subdivisionnaires')
                 ->join('solde_journaliers', 'solde_journaliers.Comptesudb', '=', 'compte_subdivisionnaires.id')
                 ->Leftjoin('sous_comptes', 'sous_comptes.id', '=', 'solde_journaliers.Souscompte')
-                ->select(DB::raw('compte_subdivisionnaires.NumeroCompte,solde_journaliers.dateOperation,solde_journaliers.repporterAu,montant,sous_comptes.NumeroCompte as Nsc, sous_comptes.Intitule as Isc'))
+                ->select(DB::raw('compte_subdivisionnaires.NumeroCompte,solde_journaliers.dateOperation,solde_journaliers.repporterAu,montant,sous_comptes.NumeroCompte as Nsc, sous_comptes.Intitule as Isc, solde_journaliers.id'))
                 ->where('solde_journaliers.Comptesudb', $id)
                 ->where('solde_journaliers.dateOperation', $periode)
                 ->get();
