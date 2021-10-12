@@ -12,6 +12,7 @@ use\App\Models\Repportage;
 use\App\Models\ComptePrincipal;
 use\App\Models\Journal;
 use\App\Models\CodeJournaux;
+use\App\Models\soldeJournalier;
 use\App\Models\Type;
 use Carbon\Carbon;
 class JournalController extends Controller
@@ -78,12 +79,54 @@ class JournalController extends Controller
     //Cas de L'impression selon un trie /Debut
       if (isset($request->Rapport)) 
       {  
-        //Trie selon le compte subdivisionnaire et la date /Debut
-         if (isset($request->SubAcount) && !empty($request->SubAcount) && isset($request->Debut) && !empty($request->Debut) && isset($request->Fin) && !empty($request->Fin)) {
+         //Trie selon le compte subdivisionnaire et la date /Debut
+         if(isset($request->SAcount) && !empty($request->SAcount) && isset($request->Debut) && !empty($request->Debut) && isset($request->Fin) && !empty($request->Fin)) {
            $Debut = $request->Debut;
            $Fin = $request->Fin;
+           
+           //On recupere le montant repporté le jour precedent
+           $MontantRepport = soldeJournalier::whereSouscompteAndRepporterau($request->SAcount, $request->Debut)->sum('montant');
+          
+           //Requetes qui recupere Tous les mouvemnts du comptes au cours de la periode precise. 
+             $Journals =DB::table('journals')
+                  ->join('sous_comptes', 'sous_comptes.id', '=', 'journals.Sous_compte')
+                  ->select(DB::raw('journals.id, journals.DateOperation, journals.Ordre, journals.MD, journals.MC,sous_comptes.NumeroCompte,sous_comptes.Intitule,journals.TypeMvt,journals.Piece, journals.Libelle'))
+                  ->where('sous_comptes.id', $request->SAcount)
+                  ->whereBetween('journals.DateOperation',[$Debut, $Fin])
+                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
+                  ->where('journals.Etat', 0)->get();
 
-           //Requetes qui recupere Tous les mouvemnts du comptes au cours de l'annee precise. 
+            //Requetes qui recupere la somme de debit des  mouvemnts du comptes au cours de la periode precise.
+              $MD =DB::table('journals')
+                  ->join('sous_comptes', 'sous_comptes.id', '=', 'journals.Sous_compte')
+                  ->select(DB::raw('*')) 
+                  ->where('journals.Etat', 0)
+                  ->where('sous_comptes.id', $request->SAcount)
+                  ->whereBetween('journals.DateOperation',[$Debut, $Fin])
+                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
+                  ->sum('MD');
+
+            //Requetes qui recupere la somme de credit des  mouvemnts du comptes au cours de l'annee precise.
+              $MC = DB::table('journals')
+                  ->join('sous_comptes', 'sous_comptes.id', '=', 'journals.Sous_compte')
+                  ->select(DB::raw('*')) 
+                  ->where('journals.Etat', 0)
+                  ->where('sous_comptes.id', $request->SAcount)
+                  ->whereBetween('journals.DateOperation',[$Debut, $Fin])
+                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
+                  ->sum('MC');
+         //Trie selon le sous compte et la date /Fin    
+         }
+
+         //Trie selon le compte subdivisionnaire et la date /Debut
+         elseif(isset($request->SubAcount) && !empty($request->SubAcount) && isset($request->Debut) && !empty($request->Debut) && isset($request->Fin) && !empty($request->Fin)) {
+           $Debut = $request->Debut;
+           $Fin = $request->Fin;
+           
+           //On recupere le montant repporté le jour precedent
+           $MontantRepport = soldeJournalier::whereComptesudbAndRepporterau($request->SubAcount, $request->Debut)->sum('montant');
+          
+           //Requetes qui recupere Tous les mouvemnts du comptes au cours de la periode precise. 
              $Journals =DB::table('journals')
                   ->join('compte_subdivisionnaires', 'journals.Compte', '=', 'compte_subdivisionnaires.id') 
                   ->select(DB::raw('journals.id, journals.DateOperation, journals.Ordre, journals.MD, journals.MC,compte_subdivisionnaires.NumeroCompte,compte_subdivisionnaires.Intitule,journals.TypeMvt,journals.Piece, journals.Libelle'))
@@ -92,7 +135,7 @@ class JournalController extends Controller
                   ->where('journals.Exercice',session()->get('ExerciceComptableId'))
                   ->where('journals.Etat', 0)->get();
 
-            //Requetes qui recupere la somme de debit des  mouvemnts du comptes au cours de l'annee precise.
+            //Requetes qui recupere la somme de debit des  mouvemnts du comptes au cours de la periode precise.
               $MD =DB::table('journals')
                   ->join('compte_subdivisionnaires', 'compte_subdivisionnaires.id', '=', 'journals.Compte')
                   ->select(DB::raw('*')) 
@@ -121,6 +164,8 @@ class JournalController extends Controller
            $Fin = $request->Fin;
 
            //Requetes qui recupere Tous les mouvemnts du comptes au cours de l'annee precise.
+            $MontantRepport = soldeJournalier::whereComptesudbAndRepporterau($request->Acount, $request->Debut)->sum('montant');
+            
              $Journals =DB::table('journals')
                   ->join('compte_subdivisionnaires', 'journals.Compte', '=', 'compte_subdivisionnaires.id')
                   ->join('compte_principals', 'compte_principals.id', '=', 'compte_subdivisionnaires.ComptePricipal')
@@ -159,6 +204,8 @@ class JournalController extends Controller
 
            $Debut = $request->Debut;
            $Fin = $request->Fin;
+            
+             $MontantRepport = 0;
 
            //Requetes qui recupere Tous les mouvemnts du comptes au cours de l'annee precise.
              $Journals =DB::table('journals')
@@ -200,155 +247,11 @@ class JournalController extends Controller
 
           //Trie selon le Journal et la date /Fin        
          }
-
-          //Trie selon le Journal/Debut
-         elseif(isset($request->Journal) && !empty($request->Journal)){
-
-           $Debut = '';
-           $Fin = '';
-
-           //Requetes qui recupere Tous les mouvemnts du comptes au cours de l'annee precise.
-             $Journals =DB::table('journals')
-                  ->join('compte_subdivisionnaires', 'journals.Compte', '=', 'compte_subdivisionnaires.id')
-                  ->join('compte_principals', 'compte_principals.id', '=', 'compte_subdivisionnaires.ComptePricipal')
-                  ->join('compte_journals', 'compte_journals.Compte', '=', 'compte_principals.id')
-                  ->join('code_journauxes', 'code_journauxes.id', '=', 'compte_journals.Journal')
-                  ->select(DB::raw('journals.id, journals.DateOperation, journals.Ordre, journals.MD, journals.MC,compte_subdivisionnaires.NumeroCompte,compte_subdivisionnaires.Intitule,journals.TypeMvt,journals.Piece, journals.Libelle'))
-                  ->where('code_journauxes.id', $request->Journal)
-                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
-                  ->where('journals.Etat', 0)->get();
-            
-            //Requetes qui recupere la somme de debit des  mouvemnts du compte au cours de l'annee precise.
-              $MD =DB::table('journals')
-                  ->join('compte_subdivisionnaires', 'compte_subdivisionnaires.id', '=', 'journals.Compte')
-                  ->join('compte_principals', 'compte_principals.id', '=', 'compte_subdivisionnaires.ComptePricipal')
-                  ->join('compte_journals', 'compte_journals.Compte', '=', 'compte_principals.id')
-                  ->join('code_journauxes', 'code_journauxes.id', '=', 'compte_journals.Journal')
-                  ->select(DB::raw('*')) 
-                  ->where('journals.Etat', 0)
-                  ->where('code_journauxes.id', $request->Journal)
-                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
-                  ->sum('MD');
-            
-            //Requetes qui recupere la somme de credit des  mouvemnts du compte au cours de l'annee precise.
-              $MC = DB::table('journals')
-                  ->join('compte_subdivisionnaires', 'compte_subdivisionnaires.id', '=', 'journals.Compte')
-                  ->join('compte_principals', 'compte_principals.id', '=', 'compte_subdivisionnaires.ComptePricipal')
-                  ->join('compte_journals', 'compte_journals.Compte', '=', 'compte_principals.id')
-                  ->join('code_journauxes', 'code_journauxes.id', '=', 'compte_journals.Journal')
-                  ->select(DB::raw('*')) 
-                  ->where('journals.Etat', 0)
-                  ->where('code_journauxes.id', $request->Journal)
-                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
-                  ->sum('MC');
-
-          //Trie selon le Journal/Fin        
-         }
-
-         //Trie selon la date /Debut
-         elseif(isset($request->Debut) && !empty($request->Debut) && isset($request->Fin) && !empty($request->Fin)){
-
-           $Debut = $request->Debut;
-           $Fin = $request->Fin;
-
-           //Requetes qui recupere Tous les mouvemnts des  comptes au cours de l'annee precise.
-             $Journals =DB::table('journals')
-                  ->join('compte_subdivisionnaires', 'journals.Compte', '=', 'compte_subdivisionnaires.id')
-                  ->join('compte_principals', 'compte_principals.id', '=', 'compte_subdivisionnaires.ComptePricipal')
-                  ->select(DB::raw('journals.id, journals.DateOperation, journals.Ordre, journals.MD, journals.MC,compte_subdivisionnaires.NumeroCompte,compte_subdivisionnaires.Intitule,journals.TypeMvt,journals.Piece, journals.Libelle'))
-                  ->whereBetween('journals.DateOperation',[$Debut, $Fin])
-                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
-                  ->where('journals.Etat', 0)->get();
-
-            //Requetes qui recupere la somme de debit des  mouvemnts des compte au cours de l'annee precise.
-              $MD =DB::table('journals')
-                  ->join('compte_subdivisionnaires', 'compte_subdivisionnaires.id', '=', 'journals.Compte')
-                  ->join('compte_principals', 'compte_principals.id', '=', 'compte_subdivisionnaires.ComptePricipal')
-                  ->select(DB::raw('*')) 
-                  ->where('journals.Etat', 0)
-                  ->whereBetween('journals.DateOperation',[$Debut, $Fin])
-                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
-                  ->sum('MD');
-            
-            //Requetes qui recupere la somme de debit des  mouvemnts des comptes au cours de l'annee precise.
-              $MC = DB::table('journals')
-                  ->join('compte_subdivisionnaires', 'compte_subdivisionnaires.id', '=', 'journals.Compte')
-                  ->join('compte_principals', 'compte_principals.id', '=', 'compte_subdivisionnaires.ComptePricipal')
-                  ->select(DB::raw('*')) 
-                  ->where('journals.Etat', 0)
-                  ->whereBetween('journals.DateOperation',[$Debut, $Fin])
-                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
-                  ->sum('MC');
-
-            //Trie selon la date /Fin
-         }
-        
-        //Trie selon le compte /Debut
-         elseif(isset($request->Acount) && !empty($request->Acount)){
-
-           $Debut ="";
-           $Fin = "";
-             $Journals =DB::table('journals')
-                  ->join('compte_subdivisionnaires', 'journals.Compte', '=', 'compte_subdivisionnaires.id')
-                  ->join('compte_principals', 'compte_principals.id', '=', 'compte_subdivisionnaires.ComptePricipal')
-                  ->select(DB::raw('journals.id, journals.DateOperation, journals.Ordre, journals.MD, journals.MC,compte_subdivisionnaires.NumeroCompte,compte_subdivisionnaires.Intitule,journals.TypeMvt,journals.Piece, journals.Libelle'))
-                  ->where('compte_principals.id', $request->Acount)
-                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
-                  ->where('journals.Etat', 0)->get();
-
-              $MD =DB::table('journals')
-                  ->join('compte_subdivisionnaires', 'compte_subdivisionnaires.id', '=', 'journals.Compte')
-                  ->join('compte_principals', 'compte_principals.id', '=', 'compte_subdivisionnaires.ComptePricipal')
-                  ->select(DB::raw('*')) 
-                  ->where('journals.Etat', 0)
-                  ->where('compte_principals.id', $request->Acount)
-                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
-                  ->sum('MD');
-
-              $MC = DB::table('journals')
-                  ->join('compte_subdivisionnaires', 'compte_subdivisionnaires.id', '=', 'journals.Compte')
-                  ->join('compte_principals', 'compte_principals.id', '=', 'compte_subdivisionnaires.ComptePricipal')
-                  ->select(DB::raw('*')) 
-                  ->where('journals.Etat', 0)
-                  ->where('compte_principals.id', $request->Acount)
-                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
-                  ->sum('MC');
-
-           //Trie selon le compte /Fin
-         }
-
-          //Trie selon le sous compte /Debut
-         elseif (isset($request->SubAcount) && !empty($request->SubAcount)) {
-           $Debut = "";
-           $Fin = "";
-             $Journals =DB::table('journals')
-                  ->join('compte_subdivisionnaires', 'journals.Compte', '=', 'compte_subdivisionnaires.id') 
-                  ->select(DB::raw('journals.id, journals.DateOperation, journals.Ordre, journals.MD, journals.MC,compte_subdivisionnaires.NumeroCompte,compte_subdivisionnaires.Intitule,journals.TypeMvt,journals.Piece, journals.Libelle'))
-                  ->where('compte_subdivisionnaires.id', $request->SubAcount)
-                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
-                  ->where('journals.Etat', 0)->get();
-
-              $MD =DB::table('journals')
-                  ->join('compte_subdivisionnaires', 'compte_subdivisionnaires.id', '=', 'journals.Compte')
-                  ->select(DB::raw('*')) 
-                  ->where('journals.Etat', 0)
-                  ->where('compte_subdivisionnaires.id', $request->SubAcount)
-                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
-                  ->sum('MD');
-
-              $MC = DB::table('journals')
-                  ->join('compte_subdivisionnaires', 'compte_subdivisionnaires.id', '=', 'journals.Compte')
-                  ->select(DB::raw('*')) 
-                  ->where('journals.Etat', 0)
-                  ->where('compte_subdivisionnaires.id', $request->SubAcount)
-                  ->where('journals.Exercice',session()->get('ExerciceComptableId'))
-                  ->sum('MC');
-         //Trie selon le compte /Fin
-          }
           //Cas Trie /Fin
         } 
         //Debut Cas du Non tri
          else{
+          $MontantRepport = 0;
          $Journals =DB::table('journals')
                   ->join('compte_subdivisionnaires', 'journals.Compte', '=', 'compte_subdivisionnaires.id') 
                   ->select(DB::raw('journals.id, journals.DateOperation, journals.Ordre, journals.MD, journals.MC,compte_subdivisionnaires.NumeroCompte,compte_subdivisionnaires.Intitule,journals.TypeMvt,journals.Piece, journals.Libelle'))
@@ -361,6 +264,11 @@ class JournalController extends Controller
         // Fin cas non tri
       }
         $table ="";
+        $table.="
+           <tr>
+             <td colspan='6'>A NOUVEAU</td>
+             <td colspan='2'>". number_format($MontantRepport,$Exe->NbreDecimal,$Exe->separateurDecimal,$Exe->separateurMilieu).' '.$Exe->Devise."</td>
+            </tr>";
         foreach ($Journals as $Journal) {
            if ($Journal->TypeMvt ==1) 
            { 
@@ -394,7 +302,7 @@ class JournalController extends Controller
         $MD = number_format($MD,$Exe->NbreDecimal,$Exe->separateurDecimal,$Exe->separateurMilieu).' '.$Exe->Devise;
         $MC = number_format($MC,$Exe->NbreDecimal,$Exe->separateurDecimal,$Exe->separateurMilieu).' '.$Exe->Devise;
         
-        $SOLDE = number_format($SOLDE,$Exe->NbreDecimal,$Exe->separateurDecimal,$Exe->separateurMilieu).' '.$Exe->Devise;
+        $SOLDE = number_format($MontantRepport+$SOLDE,$Exe->NbreDecimal,$Exe->separateurDecimal,$Exe->separateurMilieu).' '.$Exe->Devise;
         $pdf = PDF::loadView('Comptabilite/Journal.JournalPdf', compact('tableListe', 'MD', 'MC','Compte_m', 'Debut', 'Fin', 'SOLDE'))->setPaper('a2', 'Paysage');
          $fileName = 'Facture';
          return $pdf->stream($fileName . '.pdf');  
