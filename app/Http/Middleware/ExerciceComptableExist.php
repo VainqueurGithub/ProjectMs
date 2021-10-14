@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Models\ExerciceComptable;
 use Illuminate\Http\Request;
-
+use Session;
 class ExerciceComptableExist
 {
     /**
@@ -16,8 +16,8 @@ class ExerciceComptableExist
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
-    {   $Nbre = ExerciceComptable::whereEtat(0)->count('id');
-        if ($Nbre!=0) {
+    {
+        if (Session::has('ExerciceComptableId')) {
             return $next($request);
         }
         return back();

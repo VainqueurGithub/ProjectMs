@@ -235,12 +235,23 @@ Route::get('/elaborer_facture', 'FactureController@elaborer_facture')->name('ela
 
  Route::middleware([ExerciceComptableExist::class])->group(function(){
 
-      Route::resource('ExerciceComptable', 'ExerciceComptableController');
-});
+    Route::resource('Journal', 'JournalController'); 
+    Route::get('Balance', 'JournalController@Balance')->name('Balance');
+    Route::get('AfficherGdLivre', 'JournalController@AfficherGdLivre')->name('AfficherGdLivre');
+    Route::get('AfficherBalance', 'JournalController@AfficherBalance')->name('AfficherBalance');
+    Route::get('CompteResultat', 'JournalController@CompteResultat')->name('CompteResultat');
+    Route::get('Bilan', 'JournalController@Bilan')->name('Bilan');
+    Route::get('JournalPdf', 'JournalController@JournalPdf')->name('JournalPdf');
+    Route::post('JournalPdf', 'JournalController@JournalPdf')->name('JournalPdf');
+    Route::post('BilanPdf', 'JournalController@BilanPdf')->name('BilanPdf');
+    Route::get('ResultatPdf', 'JournalController@ResultatPdf')->name('ResultatPdf');
+    Route::post('ResultatPdf', 'JournalController@ResultatPdf')->name('ResultatPdf');	 
+      
+ });
 
 Route::resource('ComptePrincipal', 'ComptePrincipalController');
 Route::resource('Comptedivisionnaire', 'CompteSudbivisionnaireController');
-Route::resource('Journal', 'JournalController');
+Route::resource('ExerciceComptable', 'ExerciceComptableController');
 Route::resource('TypeCompte', 'TypeController');
 Route::resource('CodeJournaux','CodeJournauxController');
 Route::resource('CompteJournal','CompteJournalController');
@@ -264,25 +275,9 @@ Route::put('UpdateSousCompte', 'SousCompteController@UpdateSousCompte')->name('U
 //Route::get('SaisieNouveauForm','RepportageController@SaisieNouveauForm')->name('SaisieNouveauForm');
 Route::get('researchComptesReported', 'CompteRepportController@researchComptesReported')->name('researchComptesReported');
 Route::get('PlanComptable', 'JournalController@PlanComptable')->name('PlanComptable');
-Route::get('Balance', 'JournalController@Balance')->name('Balance');
 
-Route::get('research', 'JournalController@research')->name('researchSousComptes');
-Route::get('research1', 'JournalController@research1')->name('researchSousComptes');
-Route::get('research2', 'JournalController@research2')->name('researchSousComptes');
-Route::get('research3', 'JournalController@research3')->name('researchComptes');
-Route::get('research4', 'JournalController@research4')->name('researchJournal');
 
-Route::get('AfficherGdLivre', 'JournalController@AfficherGdLivre')->name('AfficherGdLivre');
 
-Route::get('AfficherBalance', 'JournalController@AfficherBalance')->name('AfficherBalance');
-
-Route::get('CompteResultat', 'JournalController@CompteResultat')->name('CompteResultat');
-Route::get('Bilan', 'JournalController@Bilan')->name('Bilan');
-Route::get('JournalPdf', 'JournalController@JournalPdf')->name('JournalPdf');
-Route::post('JournalPdf', 'JournalController@JournalPdf')->name('JournalPdf');
-Route::post('BilanPdf', 'JournalController@BilanPdf')->name('BilanPdf');
-Route::get('ResultatPdf', 'JournalController@ResultatPdf')->name('ResultatPdf');
-Route::post('ResultatPdf', 'JournalController@ResultatPdf')->name('ResultatPdf');
 Route::post('CloseExercice', 'ExerciceComptableController@CloseExercice')->name('CloseExercice');
 Route::get('ReouvrirExercice/{ExerciceId}', 'ExerciceComptableController@ReouvrirExercice')->name('ReouvrirExercice');
 

@@ -20,46 +20,15 @@
             .container{
             position: relative;
            }
-           .numeroproformat{
-              text-align: center; 
-              font-weight: bold;
-              top: 0;
-           }
-           
-             #LOGO{
-                width:100%;
-                height:120%;
-                margin-top: -40px;
-                margin-left:0px;
-                display: block;
-            }
+          
             .header-wrapper{
             text-align: center;
             margin: 30px 0 45px 0;
         }
-        #LOGO1{
-                width:100%;
-                height:120%;
-            }
-        .footer-wrapper{
-            position: absolute;
-            bottom: 0;
-            text-align: center;
-        }    
         </style>
     </head>
     <body class="no-skin">
-        <div style="font-size:15px; font-weight: bold; font-family: arial; width:50%;">
-          <p>Raison Social: <span>{{session()->get('Nom_Societe')}}</span></p>
-          <p>NIF: <span>{{session()->get('Nif')}}</span></p>
-          <p>Email: <span>{{session()->get('email')}}</span></p>
-          <p>Tél: <span>{{session()->get('Telephone')}}</span></p>
-          <p>Adresse: <span>{{session()->get('Adresse')}}</span></p>
-          <p>Banque: <span>{{session()->get('BqnomUn')}}({{session()->get('BqnumUn')}}), {{session()->get('BqnomDeux')}}({{session()->get('BqnumDeux')}})</span></p>
-        </div>   
-      <hr>
-     
-        
+      <button><a href="{{route('Bilan')}}">Retour</a></button>
            <table id="zero_config" class="table table-striped table-bordered">
                                         <thead>
                                             <tr style="text-align: center;">

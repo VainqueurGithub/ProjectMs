@@ -149,7 +149,8 @@
                                           @foreach($Journals as $Journ)
                                             @if($Journ->TypeMvt==1)
                                               <tr>
-                                                <td>{{$Journ->DateOperation}}</td>
+                                                <td>
+                                                  {{Carbon\Carbon::parse($Journ->DateOperation)->format('d-m-Y')}}</td>
                                                 <td>{{$Journ->id}}</td>
                                                 <td>{{$Journ->NumeroCompte}}</td>
                                                 <td></td>
@@ -229,74 +230,6 @@
                         @endsection
 
 <script type="text/javascript">
-  function research(va){
-     var NumeroCompte= $(va).val();
-     // var id_categorie= $("#Categorie").val();
-      $.get('{{ route('researchSousComptes') }}',
-          {NumeroCompte:NumeroCompte},
-          function(data){
-            $("#prodReas").css('display','block');
-            $('#Produit').html(data);
-          });
-   }
-
-</script> 
-
-<script type="text/javascript">
-  function research1(va){
-     var NumeroCompte= $(va).val();
-     // var id_categorie= $("#Categorie").val();
-      $.get('{{ route('researchSousComptes') }}',
-          {NumeroCompte:NumeroCompte},
-          function(data){
-            $("#prodReas1").css('display','block');
-            $('#Produit1').html(data);
-          });
-   }
-
-</script>  
-
-<script type="text/javascript">
-  function research2(va){
-     var NumeroCompte= $(va).val();
-     // var id_categorie= $("#Categorie").val();
-      $.get('{{ route('researchSousComptes') }}',
-          {NumeroCompte:NumeroCompte},
-          function(data){
-            $("#prodReas2").css('display','block');
-            $('#Produit2').html(data);
-          });
-   }
-
-</script>      
-
-<script type="text/javascript">
-  function research3(va){
-     var NumeroCompte= $(va).val();
-     // var id_categorie= $("#Categorie").val();
-      $.get('{{ route('researchComptes') }}',
-          {NumeroCompte:NumeroCompte},
-          function(data){
-            $("#prodReas3").css('display','block');
-            $('#Produit3').html(data);
-          });
-   }
-
-</script>
-
-<script type="text/javascript">
-  function research4(va){
-     var Journal= $(va).val();
-     // var id_categorie= $("#Categorie").val();
-      $.get('{{ route('researchJournal') }}',
-          {Journal:Journal},
-          function(data){
-            $("#prodReas4").css('display','block');
-            $('#Produit4').html(data);
-          });
-   }
-
-
 var WindowObjectReference = null; // variable globale
 function openSComptesPopUp(va) {
      var id = $(va).val();

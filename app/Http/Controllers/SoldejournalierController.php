@@ -140,6 +140,7 @@ class SoldejournalierController extends Controller
                 ->select(DB::raw('compte_subdivisionnaires.id, compte_subdivisionnaires.NumeroCompte, compte_subdivisionnaires.Intitule,solde_journaliers.dateOperation,solde_journaliers.repporterAu,sum(solde_journaliers.montant) as montant'))
                 ->where('solde_journaliers.dateOperation',$Today)
                 ->orWhere('solde_journaliers.repporterAu',$Today)
+                ->orWhere('solde_journaliers.created_at',$Today)
                 ->groupBy('compte_subdivisionnaires.id')
                 ->groupBy('solde_journaliers.dateOperation')
                 ->get();

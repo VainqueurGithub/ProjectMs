@@ -72,32 +72,8 @@
             <!-- ============================================================== -->
 
                         @endsection
-<script type="text/javascript">
-  function research(va){
-     var NumeroCompte= $(va).val();
-     // var id_categorie= $("#Categorie").val();
-      $.get('{{ route('researchSousComptes') }}',
-          {NumeroCompte:NumeroCompte},
-          function(data){
-            $("#prodReas").css('display','block');
-            $('#Produit').html(data);
-          });
-   }
-
-</script> 
 
 <script type="text/javascript">
-  function research1(va){
-     var NumeroCompte= $(va).val();
-     // var id_categorie= $("#Categorie").val();
-      $.get('{{ route('researchSousComptes') }}',
-          {NumeroCompte:NumeroCompte},
-          function(data){
-            $("#prodReas1").css('display','block');
-            $('#Produit1').html(data);
-          });
-   }
-
 var WindowObjectReference = null; // variable globale
 function openFFPromotionPopup(va) {
      var id = $(va).val();

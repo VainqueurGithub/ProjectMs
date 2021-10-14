@@ -10,6 +10,8 @@ class Journal extends Model
 {
     protected $fillable = ['Ordre', 'Compte', 'TypeMvt', 'DateOperation', 'Piece', 'MD', 'MC', 'Etat','Exercice', 'Libelle', 'Sous_compte'];
     
+    protected $dates = ['DateOperation'];
+    
     //To verify that only one Acount Number is set (Debit Account Or Credit Account)
     public static function UniqueFillfieldAcountNumber($v1,$v2)
     {

@@ -89,7 +89,7 @@ class ExerciceComptableController extends Controller
      }else{
           session()->flash('messageDelete', 'Cet Exercice Comptable Existe!');
      }  
-    return redirect(route('ExerciceComptable.index'));
+    return view('welcome');
   }
 
     /**

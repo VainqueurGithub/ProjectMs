@@ -33,11 +33,11 @@ class JournalController extends Controller
                   ->select(DB::raw('journals.id, journals.DateOperation, journals.Ordre, journals.MD, journals.MC,compte_subdivisionnaires.NumeroCompte,journals.Libelle,journals.TypeMvt,journals.Piece, journals.DateOperation,sous_comptes.NumeroCompte as SC'))
                   ->where('journals.Etat', 0)
                   ->where('journals.Exercice', session()->get('ExerciceComptableId'))
-                  ->where('journals.DateOperation', $periode)
+                  ->where('journals.created_at', $periode)
                   ->get();
 
-        $MD = Journal::whereEtatAndExerciceAndDateoperation(0,session()->get('ExerciceComptableId'), $periode)->sum('MD');
-        $MC = Journal::whereEtatAndExerciceAndDateoperation(0,session()->get('ExerciceComptableId'), $periode)->sum('MC');
+        $MD = Journal::whereEtatAndExerciceAndCreatedAt(0,session()->get('ExerciceComptableId'),$periode)->sum('MD');
+        $MC = Journal::whereEtatAndExerciceAndCreatedAt(0,session()->get('ExerciceComptableId'),$periode)->sum('MC');
 
         $MD = number_format($MD,session()->get('ExerciceNbreDecimal'),session()->get('ExerciceSeparateurDecimal'),session()->get('ExerciceseparateurMilieu')).' '.session()->get('ExerciceDevise');
         $MC = number_format($MC,session()->get('ExerciceNbreDecimal'),session()->get('ExerciceSeparateurDecimal'),session()->get('ExerciceseparateurMilieu')).' '.session()->get('ExerciceDevise'); 

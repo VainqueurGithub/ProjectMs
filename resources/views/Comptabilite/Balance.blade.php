@@ -96,16 +96,4 @@
             <!-- ============================================================== -->
             <!-- ============================================================== -->
 
-           @endsection
-
-<script type="text/javascript">
-  function AddSocietyInformation()
-  {
-    document.getElementById("SocietyInformation").style.display = 'block';
-  }
-
-  function HideSocietyInformation()
-  {
-    document.getElementById("SocietyInformation").style.display = 'none';
-  }
-</script>           
+           @endsection       

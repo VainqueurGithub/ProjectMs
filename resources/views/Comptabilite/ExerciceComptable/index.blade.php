@@ -27,7 +27,7 @@
                                                 <th>Devise</th>
                                                 <th>Nbre Decimal</th>
                                                 <th>Sep.Decimal</th>
-                                                <th>Sep.Milieu</th>
+                                                <th>Sep.Milier</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -83,9 +83,9 @@
                                 <h4 class="modal-title"><strong>Creer un Exercice Comptable</strong></h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             </div>
-                        <form method="POST" accept="{{ route('ExerciceComptable.store')}}">
+                        <form method="POST" action="{{ route('ExerciceComptable.store')}}" onsubmit='return confirm("Avant d\'effectuer cette Operation assurez-vous d\'avoir repporté données de l\'exercice précedente")'>
+
                             <div class="modal-body">
-                               
                                     {{ csrf_field() }}
                                     <div class="row">
                                         <div class="col-md-6">
@@ -112,14 +112,14 @@
                                             <input class="form-control form-white" placeholder="Nombre decimal" type="text" name="NbreDecimal" />
                                             {!! $errors->first('NbreDecimal', '<span class="error">:message</span>') !!}
 
-                                            <label class="control-label">Separateur du milieu *</label>
-                                            <input class="form-control form-white" placeholder="Separateur du milieu" type="text" name="SeparateurMilieu" />
+                                            <label class="control-label">Separateur du Milier *</label>
+                                            <input class="form-control form-white" placeholder="Separateur du Milier" type="text" name="SeparateurMilieu" />
                                             {!! $errors->first('SeparateurMilieu', '<span class="error">:message</span>') !!}
                                         </div>
                                     </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary waves-effect waves-light save-category" onclick='return confirm("Avant d\'effectuer cette Operation assurez-vous d\'avoir repporté données de l\'exercice précedente")'>Enregistrer</button>
+                                <button type="submit" class="btn btn-primary waves-effect waves-light save-category" onsubmit='return confirm("Avant d\'effectuer cette Operation assurez-vous d\'avoir repporté données de l\'exercice précedente")'>Enregistrer</button>
                                 <button type="reset" class="btn btn-secondary waves-effect" data-dismiss="modal">Annuler</button>
                             </div>
                            </form> 
