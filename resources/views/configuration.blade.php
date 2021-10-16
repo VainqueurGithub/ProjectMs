@@ -19,6 +19,8 @@
                     <li><a href="{{ route('Services.index')}}">Gestions des Services</a></li>
                     <li><a href="{{ route('ChangerAdresse')}}">Gestion d'identité du MS</a></li>
                     <li><a href="{{ route('depreciationForm')}}">Ammortir les immobiliers</a></li>
+                    <li><a href="{{ route('role.index')}}">Gestion des roles</a></li>
+                    <li><a href="{{ route('module.index')}}">Gestion des modules</a></li>
                   </ol>
               </div>
             </div>
@@ -37,11 +39,11 @@
                     <li><a href="{{ route('Comptedivisionnaire.index')}}"> Compte subdivisionnaire </a></li>
                     <li><a href="{{ route('sous_compte.index')}}"> Sous Comptes </a></li>
                     <li><a href="{{ route('CodeJournaux.index')}}">Journeaux</a></li>
-                    <!--li><a href="{{ route('CompteJournal.index')}}">Compte Journal</a></li-->
                     <li><a href="{{ route('uploadinitialbilanform')}}">Uploader Bilan Initial</a></li>
                     <li><a href="{{ route('Repportage.index')}}">Saisie des à nouveaux</a></li>
                     <li><a href="{{ route('Parametre_generaux.edit', 1)}}">Parametres générales</a></li>
                     <li><a href="{{route('soldeJournalierForm')}}"> Cloture Periodique </a></li>
+                    <li><a href="{{ route('guichet.index')}}">Gestion des Guichets</a></li>
                   </ol>
               </div>
             </div>

@@ -305,6 +305,15 @@ Route::get('getSolde', 'SoldeJournalierController@getSolde')->name('getSolde');
 Route::get('/solde_detail/{account}/{period}', 'SoldeJournalierController@solde_detail')->name('solde_detail');
 Route::resource('SoldeJour', 'SoldeJournalierController');
 
+Route::resource('guichet', 'GuichetController');
+
+//ROUTES POUR LA GESTION DES DROITS D'ACCESS AU SYSTEME MS
+Route::resource('role', 'roleController');
+Route::resource('module', 'moduleController');
+Route::resource('permission', 'permissionController');
+Route::post('add_permission', 'roleController@add_permission')->name('add_permission');
+Route::put('remove_permission', 'roleController@remove_permission')->name('remove_permission');
+
 });
 
 });
