@@ -328,6 +328,7 @@ Route::resource('guichet', 'GuichetController');
 //ROUTES POUR LA GESTION DES DROITS D'ACCESS AU SYSTEME MS
     Route::resource('roles', 'RoleController');
     Route::resource('permissions', 'PermissionController');
+    Route::post('add_permission', 'UtilisateurController@add_permission')->name('add_permission');
 });
 
 });

@@ -12,7 +12,6 @@
             </div>
             <div class="card">
               <div class="card-body">
-                 <h1>{{ Auth::user()->permissions }}</h1>
                   <ol>
                     <li><a href="{{ route('Partenaires.index')}}">Géstion des Partenaires</a></li>
                     <li><a href="{{ route('Origines.index')}}">Géstion des Origines</a></li>

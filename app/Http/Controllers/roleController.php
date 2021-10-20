@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Auth;
+use DB;
 class RoleController extends Controller
 {
 
@@ -24,8 +25,9 @@ class RoleController extends Controller
      */
     public function index()
     {   
-        $roles = Role::orderBy('id','DESC')->paginate(5);
-        return view('roles.index', compact('roles'));
+        $roles = Role::all();
+        $permission = Permission::get();
+        return view('roles.index', compact('roles', 'permission'));
     }
 
     /**
@@ -36,7 +38,6 @@ class RoleController extends Controller
     public function create()
     {
         $permission = Permission::get();
-
         return view('roles.create', compact('permission'));
     }
 

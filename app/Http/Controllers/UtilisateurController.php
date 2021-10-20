@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Partenaire;
 use App\Http\Requests;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Arr;
 use Hash;
 use DB;
@@ -28,7 +29,8 @@ class UtilisateurController extends Controller
     public function index()
     {
        $Utilisateurs = User::all();
-       return view('Utilisateurs.index', compact('Utilisateurs')); 
+       $roles = Role::pluck('name','name')->all();
+       return view('Utilisateurs.index', compact('Utilisateurs', 'roles')); 
     }
 
     /**
@@ -87,8 +89,16 @@ class UtilisateurController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
+    {   
+        $user = User::find($id);
+    
+        $Permissions = DB::table('permissions')
+                          ->Leftjoin('model_has_permissions', 'permissions.id', '=', 'model_has_permissions.permission_id')
+                          ->select(DB::raw('permissions.id,permissions.name,model_has_permissions.permission_id,model_has_permissions.model_id'))
+                          ->get();
+
+
+        return view('Utilisateurs.show',compact('user', 'Permissions'));
     }
 
     /**
@@ -103,7 +113,7 @@ class UtilisateurController extends Controller
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $user->roles->pluck('name', 'name')->all();
     
-        return view('users.edit', compact('user', 'roles', 'userRole'));
+        return view('Utilisateurs.edit', compact('user', 'roles', 'userRole'));
     }
 
     /**
@@ -235,5 +245,46 @@ class UtilisateurController extends Controller
             'Etat' => 0 
         ]);
             return redirect(route('CorbUser'));
+    }
+
+
+    // Ajouter une permission specifique a l'utilisateurs
+
+    public function add_permission(Request $request){
+
+        $permissions = $request['permission'];
+        $user = User::findOrFail($request->User);
+        $i=0;
+        
+        //$ComptesR = compte_report_compte::whereCompteRepportId($request->CompteR)->get();
+
+        for ($i=0; $i <count($request['permission']) ; $i++) { 
+            $permission = (int)$permissions[$i];
+        
+
+            if (isset($request->ajouter)) {
+                
+                $Nbre =DB::table('model_has_permissions')
+                   ->select(DB::raw(''))
+                   ->wherePermissionId($permission)
+                   ->whereModelId($request->User)->count('permission_id');
+
+                if ($Nbre==0) {
+                   $user->givePermissionTo($permission);
+                }   
+           }
+           else{
+
+                $Nbre =DB::table('model_has_permissions')
+                   ->select(DB::raw(''))
+                   ->wherePermissionId($permission)
+                   ->whereModelId($request->User)->count('permission_id');
+                if($Nbre>0) {
+                    $user->revokePermissionTo($permission);
+                }  
+                
+           }
+        } 
+        return back();   
     }
 }

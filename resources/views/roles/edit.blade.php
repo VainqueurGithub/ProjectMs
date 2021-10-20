@@ -16,15 +16,14 @@
                   </div>
                 </div>
               </div>
- <form method="POST" action="{{route('roles.store')}}">
 
+            {!! Form::model($role, ['method' => 'PATCH','route' => ['roles.update', $role->id]]) !!}
             <div class="row" style="">
                 <div class="col-2"></div>
                 <div class="col-md-8">
                     <div class="form-group">
                       <label>Nom *</label>
-                      <input class="form-control form-white" name="name" value="{{ old('name')}}"/>
-                      {!! $errors->first('name', '<span class="error">:message</span>') !!}
+                      {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
                     </div>
        
                     <strong>Permission:</strong>
@@ -34,21 +33,20 @@
                   <div class="row">
                             @foreach ($permission as $key => $value)
                             <div class="col-md-4">
-                                <input class="form-check-input" name="permission[]" type="checkbox" value="{{$value->id}}">{{$value->name}}
+                                {{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, array('class' => 'form-check-input')) }}{{$value->name}}
                             </div>
                             @endforeach
                     
                   </div>
                         
                     <label></label><br>
-                     <button type="submit" class="btn btn-primary">Enregistrer</button>
+                     <button type="submit" class="btn btn-primary">Modifier</button>
                
-           </form>
+           {!! Form::close() !!}
             </div>
                     </div>
 
                 </div>
             </div>
         </section>
-
 @endsection
