@@ -12,6 +12,7 @@
             </div>
             <div class="card">
               <div class="card-body">
+                 <h1>{{ Auth::user()->permissions }}</h1>
                   <ol>
                     <li><a href="{{ route('Partenaires.index')}}">Géstion des Partenaires</a></li>
                     <li><a href="{{ route('Origines.index')}}">Géstion des Origines</a></li>
@@ -20,9 +21,9 @@
                     <li><a href="{{ route('ChangerAdresse')}}">Gestion d'identité du MS</a></li>
                     <li><a href="{{ route('depreciationForm')}}">Ammortir les immobiliers</a></li>
                     
-
+                    @can('role-list')
                     <li><a href="{{ route('roles.index')}}">Gestion des roles</a></li>
-                 
+                    @endcan
                     <li><a href="{{ route('permissions.index')}}">Gestion des permissions</a></li>
                   
                     <li><a href="{{ route('Utilisateurs.index')}}">Gestion des utilsateurs</a></li>
