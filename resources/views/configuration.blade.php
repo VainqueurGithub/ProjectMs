@@ -56,6 +56,27 @@
               </div>
             </div>
           </div>
+
+           <div class="col-6">
+            <div class="card-header">
+              GESTION  DES DROITS D'ACCESS
+            </div>
+            <div class="card">
+              <div class="card-body">
+                  <ol>
+                    @can('role-list')
+                    <li><a href="{{ route('roles.index')}}">Gestion des roles</a></li>
+                    @endcan
+
+                    @can('permission-list')
+                    <li><a href="{{ route('permissions.index')}}">Gestion des permissions</a></li>
+                    @endcan
+                    <li><a href="{{ route('Utilisateurs.index')}}">Gestion des utilsateurs</a></li>
+                  </ol>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
