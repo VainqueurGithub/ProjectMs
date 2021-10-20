@@ -52,5 +52,8 @@ class Kernel extends HttpKernel
         'ExerciceComptableExist'=> \App\Http\Middleware\ExerciceComptableExist::class,
         'InitialBilan'=> \App\Http\Middleware\InitialBilan::class,
         'CheckDatabaseConnection'=> \App\Http\Middleware\CheckDatabaseConnection::class,
+        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
     ];
 }

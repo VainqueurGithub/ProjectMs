@@ -3,9 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\permission;
-class permissionController extends Controller
-{
+use Spatie\Permission\Models\Permission;
+use DB;
+class PermissionController extends Controller
+{   
+    function __construct()
+    {
+         $this->middleware('permission:permission-list|permission-create|permission-edit|permission-delete', ['only' => ['index','store']]);
+         $this->middleware('permission:permission-create', ['only' => ['create','store']]);
+         $this->middleware('permission:permission-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:permission-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +22,9 @@ class permissionController extends Controller
      */
     public function index()
     {
-        //
+        $data = Permission::orderBy('id','DESC')->paginate(5);
+
+        return view('permissions.index', compact('data'));
     }
 
     /**
@@ -23,7 +34,7 @@ class permissionController extends Controller
      */
     public function create()
     {
-        //
+        return view('permissions.create');
     }
 
     /**
@@ -34,13 +45,14 @@ class permissionController extends Controller
      */
     public function store(Request $request)
     {
-        permission::create([
-            'link'=>$request->Link,
-            'action'=>$request->Action,
-            'module_id'=>$request->module
+        $this->validate($request, [
+            'name' => 'required|unique:permissions,name',
         ]);
-        $module = $request->module;
-        return redirect(route('module.show', compact('module')));
+    
+        Permission::create(['name' => $request->input('name')]);
+    
+        return redirect()->route('permissions.index')
+            ->with('success', 'Permission created successfully.');
     }
 
     /**
@@ -51,7 +63,9 @@ class permissionController extends Controller
      */
     public function show($id)
     {
-        //
+        $permission = Permission::find($id);
+    
+        return view('permissions.show', compact('permission'));
     }
 
     /**
@@ -62,7 +76,9 @@ class permissionController extends Controller
      */
     public function edit($id)
     {
-        //
+        $permission = Permission::find($id);
+    
+        return view('permissions.edit', compact('permission'));
     }
 
     /**
@@ -74,7 +90,16 @@ class permissionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
+    
+        $permission = Permission::find($id);
+        $permission->name = $request->input('name');
+        $permission->save();
+        
+        return redirect()->route('permissions.index')
+            ->with('success', 'Permission updated successfully.');
     }
 
     /**
@@ -85,6 +110,9 @@ class permissionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Permission::find($id)->delete();
+        
+        return redirect()->route('permissions.index')
+            ->with('success', 'Permission deleted successfully');
     }
 }

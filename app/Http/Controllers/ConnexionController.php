@@ -17,18 +17,19 @@ class ConnexionController extends Controller
 	}
     public function Verification(Request $request)
     { 
-      $request->Password = sha1($request->PassWord);
+
+      $request->Password = $request->PassWord;
 
     //On Test si l'utilisateur Existe dans la BDD
 
        $UtilisateurNbre = Utilisateur::whereEtatAndEmailAndMotdepasse(0,$request->UserName,$request->Password)->count();
-
+     
   if ($UtilisateurNbre>0) 
   {
       $Utilisateur = Utilisateur::whereEtatAndEmailAndMotdepasse(0,$request->UserName,$request->Password)->first();
       
       	if ($Utilisateur->Email == $request->UserName AND $Utilisateur->MotdePasse == $request->Password) 
-      	{
+      	{ 
           $request->session()->put('id',$Utilisateur->id);
       	  $request->session()->put('Nom',$Utilisateur->Nom);
       	  $request->session()->put('Prenom',$Utilisateur->Prenom);
@@ -96,13 +97,15 @@ class ConnexionController extends Controller
       	else
       	{
       		session()->flash('ErrorAu', 'Vos Parametres de Connexion sont érronés');
-      		return view('welcome');
+      		//return view('welcome');
+          echo "string";
       	}
   }
   else
   {
     session()->flash('ErrorAu', 'Vos Parametres de Connexion sont érronés');
-          return view('welcome');
+    echo "string1";
+         // return view('welcome');
   }    
 }
  

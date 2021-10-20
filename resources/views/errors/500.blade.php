@@ -462,7 +462,7 @@
                 <div class="max-w-sm m-8">
                     
                     <p class="text-grey-darker text-2xl md:text-3xl font-light mb-8 leading-normal">
-                        {{$data}} <a href="{{route('index')}}">MS-SYS</a>
+                        {{$data}} <a href="{{route('main_login')}}">MS-SYS</a>
                     </p>
 
                 </div>

@@ -19,8 +19,14 @@
                     <li><a href="{{ route('Services.index')}}">Gestions des Services</a></li>
                     <li><a href="{{ route('ChangerAdresse')}}">Gestion d'identité du MS</a></li>
                     <li><a href="{{ route('depreciationForm')}}">Ammortir les immobiliers</a></li>
-                    <li><a href="{{ route('role.index')}}">Gestion des roles</a></li>
-                    <li><a href="{{ route('module.index')}}">Gestion des modules</a></li>
+                    
+
+                    <li><a href="{{ route('roles.index')}}">Gestion des roles</a></li>
+                 
+                    <li><a href="{{ route('permissions.index')}}">Gestion des permissions</a></li>
+                  
+                    <li><a href="{{ route('Utilisateurs.index')}}">Gestion des utilsateurs</a></li>
+                   
                   </ol>
               </div>
             </div>
@@ -33,7 +39,9 @@
             <div class="card">
               <div class="card-body">
                   <ol>
+                    @can('exercice-list')
                     <li><a href="{{ route('ExerciceComptable.index')}}">Exercice Comptable </a></li>
+                    @endcan 
                     <li><a href="{{ route('TypeCompte.index')}}">Type de Comptes </a></li>
                     <li><a href="{{ route('ComptePrincipal.index')}}"> Compte Principal </a></li>
                     <li><a href="{{ route('Comptedivisionnaire.index')}}"> Compte subdivisionnaire </a></li>

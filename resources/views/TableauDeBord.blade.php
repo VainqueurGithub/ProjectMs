@@ -24,9 +24,9 @@
               <span class="info-box-icon bg-info elevation-1"><i class="fas fa-wallet"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">{{ $NbreCot }} Cotisations</span>
+                <span class="info-box-text">Cotisations</span>
                 <span class="info-box-number">
-                  {{ $MontantCot }} 
+                
                   <small>FBU</small>
                 </span>
               </div>
@@ -40,9 +40,9 @@
               <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-dollar-sign"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">{{ $NbreCons }} Prestations</span>
+                <span class="info-box-text">Prestations</span>
                  <span class="info-box-number">
-                  {{ $MontantCons }} 
+                 
                   <small>FBU</small>
                 </span>
               </div>
@@ -61,7 +61,7 @@
 
               <div class="info-box-content">
                 <span class="info-box-text">Ecarts</span>
-                <span class="info-box-number">{{ $ECART}}</span>
+                <span class="info-box-number"></span>
                 <small>FBU</small>
               </div>
               <!-- /.info-box-content -->

@@ -2,6 +2,10 @@
  use App\Http\Middleware\ExerciceComptableExist;
  use App\Http\Middleware\InitialBilan;
  use App\Http\Middleware\CheckDatabaseConnection;
+ use App\Http\Controllers\RoleController;
+ use App\Http\Controllers\PermissionController;
+ use App\Http\Controllers\Auth\AuthController;
+ use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -15,8 +19,22 @@
 
  // ROUTE POUR LA PAGE DE CONNEXION MST ET PARTENAIRE
 
-Route::get('/', function () {return view('welcome');})->name('index');
+Route::get('/', function () {
+    return view('home');
+});
 Route::get('/Login', 'PartenaireController@Login')->name('Login');
+
+Route::get('main-login', [AuthController::class, 'index'])->name('main_login');
+
+
+
+Route::get('registration', [AuthController::class, 'registration'])->name('register');
+
+Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post'); 
+
+Route::get('/TableauDeBord', 'TableauDeBordController@TableauDeBord')->name('TableauDeBord'); 
+
+Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
 
 // MIDDLEWARE POUR VERIFIER SI LA BASE DE DONNEE EXISTES
@@ -24,8 +42,8 @@ Route::get('/Login', 'PartenaireController@Login')->name('Login');
 Route::middleware([CheckDatabaseConnection::class])->group(function(){
 
 Route::post('/file_upload', 'RepportageController@uploadfile')->name('uploadfile');
-
-Route::post('/main/Verification', 'ConnexionController@Verification')->name('Verification');
+Route::post('post-login', [AuthController::class, 'postLogin'])->name('login.post'); 
+//Route::post('/main/Verification', 'ConnexionController@Verification')->name('Verification');
 
 Route::post('/main/VerifLogin', 'ConnexionController@VerifLogin')->name('VerifLogin');
 
@@ -197,7 +215,7 @@ Route::get('consommer', 'TableauDeBordController@consommer')->name('consommer');
 Route::get('ecart', 'TableauDeBordController@ecart')->name('ecart');
 Route::get('dettePart', 'TableauDeBordController@dettePart')->name('dettePart');
 
-Route::get('/TableauDeBord', 'TableauDeBordController@TableauDeBord')->name('TableauDeBord');
+
 
 
 Route::post('AyantsDroit/research', 'AyantDroitController@research')->name('researchAyant');
@@ -308,12 +326,8 @@ Route::resource('SoldeJour', 'SoldeJournalierController');
 Route::resource('guichet', 'GuichetController');
 
 //ROUTES POUR LA GESTION DES DROITS D'ACCESS AU SYSTEME MS
-Route::resource('role', 'roleController');
-Route::resource('module', 'moduleController');
-Route::resource('permission', 'permissionController');
-Route::post('add_permission', 'roleController@add_permission')->name('add_permission');
-Route::put('remove_permission', 'roleController@remove_permission')->name('remove_permission');
-
+    Route::resource('roles', 'RoleController');
+    Route::resource('permissions', 'PermissionController');
 });
 
 });

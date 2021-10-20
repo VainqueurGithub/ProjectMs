@@ -3,12 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Utilisateur;
+use App\Models\User;
 use App\Models\Partenaire;
 use App\Http\Requests;
-
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Arr;
+use Hash;
+use DB;
 class UtilisateurController extends Controller
-{
+{  
+
+    // function __construct()
+    // {
+    //      $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','store']]);
+    //      $this->middleware('permission:user-create', ['only' => ['create','store']]);
+    //      $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
+    //      $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +27,7 @@ class UtilisateurController extends Controller
      */
     public function index()
     {
-       $Utilisateurs = Utilisateur::whereEtatAndConcepteur(0, 0)->get();
+       $Utilisateurs = User::all();
        return view('Utilisateurs.index', compact('Utilisateurs')); 
     }
 
@@ -27,8 +38,9 @@ class UtilisateurController extends Controller
      */
     public function create()
     {   
-        $Utilisateur =new Utilisateur;
-        return view('Utilisateurs.create', compact('Utilisateur'));
+        $roles = Role::pluck('name','name')->all();
+
+        return view('Utilisateurs.create',compact('roles'));
     }
 
     /**
@@ -38,34 +50,34 @@ class UtilisateurController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //Verification de l'unicite de l'adresse Email
-        $NbreEmail = Utilisateur::whereEmail($request->Email)->count();
-        if ($NbreEmail == 0) 
-        {
-          $this->validate($request, [
-          'Nom' => 'required', 
-          'Prenom' => 'required',
-          'Email' => 'required|Email',
-          'Profil' => 'required'
-          ]);
+    {   
+        $this->validate($request, [
 
-            Utilisateur::create([
-            'Nom' => $request->Nom,
-            'Prenom' => $request->Prenom,
-            'Email' => $request->Email,
-            'Profil' => $request->Profil,
-            'MotdePasse' => sha1(12345)
+            'name' => 'required',
+
+            'email' => 'required|email|unique:users,email',
+
+            'roles' => 'required'
+
         ]);
 
-         session()->flash('message', 'Utilisateur Crée avec success!');
-        }
-        else
-        {
-           session()->flash('messageDelete', 'Adresse Email Existe deja'); 
-        }
+    
 
-        return redirect(route('Utilisateurs.index'));
+        $input = $request->all();
+
+        $input['password'] = Hash::make('BWLCMMPDVA');
+
+    
+
+        $user = User::create($input);
+
+        $user->assignRole($request->input('roles'));
+
+    
+
+        return redirect()->route('Utilisateurs.index')
+
+                        ->with('success','User created successfully');
     }
 
     /**
@@ -87,8 +99,11 @@ class UtilisateurController extends Controller
      */
     public function edit($id)
     {
-        $Utilisateur = Utilisateur::findOrFail($id);
-        return view('Utilisateurs.edit', compact('Utilisateur'));
+        $user = User::find($id);
+        $roles = Role::pluck('name', 'name')->all();
+        $userRole = $user->roles->pluck('name', 'name')->all();
+    
+        return view('users.edit', compact('user', 'roles', 'userRole'));
     }
 
     /**
@@ -101,32 +116,25 @@ class UtilisateurController extends Controller
     public function update(Request $request, $id)
     {
         //Verification de l'unicite de l'adresse Email
-        $NbreEmail = Utilisateur::whereEmail($request->Email)->where('id', '!=', $id)->count();
-        if ($NbreEmail == 0) 
-        {
-          $this->validate($request, [
-          'Nom' => 'required', 
-          'Prenom' => 'required',
-          'Email' => 'required|Email',
-          'Profil' => 'required'
-          ]);
-            
-            $Utilisateur = Utilisateur::findOrFail($id);
-            $Utilisateur->update([
-            'Nom' => $request->Nom,
-            'Prenom' => $request->Prenom,
-            'Email' => $request->Email,
-            'Profil' => $request->Profil
-        ]);
-
-         session()->flash('message', 'Utilisateur Modifié avec success!');
+        $input = $request->all();
+        
+        if(!empty($input['password'])) { 
+            $input['password'] = Hash::make($input['password']);
+        } else {
+            $input = Arr::except($input, array('password'));    
         }
-        else
-        {
-           session()->flash('messageDelete', 'Adresse Email Existe deja'); 
-        }
+    
+        $user = User::find($id);
+        $user->update($input);
 
-        return redirect(route('Utilisateurs.index'));
+        DB::table('model_has_roles')
+            ->where('model_id', $id)
+            ->delete();
+    
+        $user->assignRole($request->input('roles'));
+    
+        return redirect()->route('Utilisateurs.index')
+            ->with('success', 'User updated successfully.');
     }
 
     /**
@@ -137,7 +145,7 @@ class UtilisateurController extends Controller
      */
     public function destroy($id)
     {
-            $Utilisateur = Utilisateur::findOrFail($id);
+            $Utilisateur = User::findOrFail($id);
             $Utilisateur->update([
             'Etat' =>1
         ]);
@@ -147,7 +155,7 @@ class UtilisateurController extends Controller
 
     public function restaureMotDePasse($id)
     {
-            $Utilisateur = Utilisateur::findOrFail($id);
+            $Utilisateur = User::findOrFail($id);
             $Utilisateur->update([
             'MotdePasse' => sha1(12345)
         ]);
@@ -192,7 +200,7 @@ class UtilisateurController extends Controller
         }
         else
         {
-           $Utilisateur = Utilisateur::findOrFail($id);
+           $Utilisateur = User::findOrFail($id);
             if ($request->HoldPasseWord == $Utilisateur->MotdePasse) 
             {
                 if ($request->NewPassword == $request->ConfirmNewPassword) 
@@ -216,13 +224,13 @@ class UtilisateurController extends Controller
 
     public function CorbUser()
     {
-        $Utilisateurs = Utilisateur::whereEtat(1)->get();
+        $Utilisateurs = User::whereEtat(1)->get();
        return view('Utilisateurs.CorbUser', compact('Utilisateurs')); 
     }
 
     public function RestaurerUser($id)
     {
-        $Utilisateur = Utilisateur::findOrFail($id);
+        $Utilisateur = User::findOrFail($id);
             $Utilisateur->update([
             'Etat' => 0 
         ]);

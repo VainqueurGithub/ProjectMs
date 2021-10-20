@@ -1,46 +1,93 @@
-@extends('layout.base', ['title' => 'Assurance - Nouvel Utilisateur'])
+@extends('layout.base')
+
+
 @section('content')
-        <div id="page-wrapper" >
-            <div id="page-inner">
-                <div class="row">
-                    <div class="col-md-12">
-        <h2 style="color: blue;font-weight: bold;text-align: center;">Nouvel Utilisateur</h2>
+
+<div class="row">
+
+    <div class="col-lg-12 margin-tb">
+
+        <div class="pull-left">
+
+            <h2>Create New User</h2>
+
         </div>
-                </div>
-                 <!-- /. ROW  -->
-                 <hr />
-               <div class="row">
-                <div class="col-md-12">
-                    <!-- Form Elements -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                             Ajout d'un Utilisateur
-                             <a href="{{ route('Utilisateurs.index') }}" style="text-decoration: none;color: white">
-                             <div class="btn btn-info pull-right"  style="margin-top: -5px">
-                            <i class="fa fa-book"></i> Liste des Utilisateur
-                            </a>
-                        </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <form role="form" method="POST" action="{{ route('Utilisateurs.store')}}">
-                                      {{ csrf_field() }}
-                                        @include('Utilisateurs._Form', ['ButtonSubmitTexe'=>'Enregistrer'])
-                                        <button type="reset" class="btn btn-default">Annuler</button>
-                                      </div>
-                                     
-                                    </form>
-                                    <br />                    
+
+        <div class="pull-right">
+
+            <a class="btn btn-primary" href="{{ route('Utilisateurs.index') }}"> Back</a>
+
+        </div>
+
     </div>
 
-                            </div>
-                        </div>
-                    </div>
-                     <!-- End Form Elements -->
-                </div>
-            </div>
+</div>
+
+
+@if (count($errors) > 0)
+
+  <div class="alert alert-danger">
+
+    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+
+    <ul>
+
+       @foreach ($errors->all() as $error)
+
+         <li>{{ $error }}</li>
+
+       @endforeach
+
+    </ul>
+
+  </div>
+
+@endif
+
+
+
+<form method="POST" action="{{route('Utilisateurs.store')}}">
+
+ <div class="row">
+   <div class="col-md-3"></div>
+   <div class="col-md-6">
+      <div class="form-group">
+        <label>Nom *</label>
+        <input class="form-control" name="name" value="{{ old('name')}}"/>
+        {!! $errors->first('name', '<span class="error">:message</span>') !!}
+      </div>
+
+      <div class="form-group">
+        <label>Prenom *</label>
+        <input class="form-control" name="Prenom" value="{{ old('Prenom')}}" />
+        {!! $errors->first('Prenom', '<span class="error">:message</span>') !!}
+      </div>
+
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email"  class="form-control" name="email" value="{{ old('email')}}" />
+        {!! $errors->first('email', '<span class="error">:message</span>') !!}
+      </div>
+
+      <div class="form-group">
+               <div class="form-group">
+
+            <strong>Role:</strong>
+
+            {!! Form::select('roles[]', $roles,[], array('class' => 'form-control','multiple')) !!}
+
+        </div>
+      </div>
+
+      <label></label><br>
+      <button type="submit" class="btn btn-primary">Enregistrer</button>
     </div>
-             <!-- /. PAGE INNER  -->
-            </div>
-         <!-- /. PAGE WRAPPER  -->
-@endsection 
+ </div>
+</form>
+@endsection
+
+
+
+
+
+

@@ -1,24 +1,31 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Requests\roleFormRequest;
+
 use Illuminate\Http\Request;
-use App\Models\role;
-use App\Models\permission;
-use App\Models\role_permission;
-use DB;
-class roleController extends Controller
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+class RoleController extends Controller
 {
+
+    function __construct()
+    {
+        // $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','store']]);
+        // $this->middleware('permission:role-create', ['only' => ['create','store']]);
+        // $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
+        // $this->middleware('permission:role-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $roles = role::whereEtat(0)->get();
-        $rol = new role();
-        return view('roles.index', compact('roles', 'rol')); 
+    {   
+        return auth()->user()->permissions();
+        // $roles = Role::orderBy('id','DESC')->paginate(5);
+        // return view('roles.index', compact('roles'));
     }
 
     /**
@@ -28,7 +35,9 @@ class roleController extends Controller
      */
     public function create()
     {
-        //
+        $permission = Permission::get();
+
+        return view('roles.create', compact('permission'));
     }
 
     /**
@@ -37,13 +46,18 @@ class roleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(roleFormRequest $request)
+    public function store(Request $request)
     {
-        role::create([
-            'role'=>$request->Role
+        $this->validate($request, [
+            'name' => 'required|unique:roles,name',
+            'permission' => 'required',
         ]);
-        session()->flash('message', 'Vous venez d\'ajouter '.$request->Role.' comme role d\'accèss au système MS');
-        return redirect(route('role.index'));
+    
+        $role = Role::create(['name' => $request->input('name')]);
+        $role->syncPermissions($request->input('permission'));
+    
+        return redirect()->route('roles.index')
+            ->with('success', 'Role created successfully.');
     }
 
     /**
@@ -54,12 +68,12 @@ class roleController extends Controller
      */
     public function show($id)
     {
-        $Permissions = DB::table('permissions')
-                    ->leftJoin('role_permissions', 'role_permissions.permission_id', '=', 'permissions.id')
-                    ->join('modules', 'modules.id', '=', 'permissions.module_id')
-                    ->select(DB::raw('permissions.id, permissions.link,permissions.action,modules.module'))
-                    ->get();
-        return view('roles.show', compact('Permissions', 'id'));
+        $role = Role::find($id);
+        $rolePermissions = Permission::join('role_has_permissions', 'role_has_permissions.permission_id', 'permissions.id')
+            ->where('role_has_permissions.role_id',$id)
+            ->get();
+    
+        return view('roles.show', compact('role', 'rolePermissions'));
     }
 
     /**
@@ -70,7 +84,14 @@ class roleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $role = Role::find($id);
+        $permission = Permission::get();
+        $rolePermissions = DB::table('role_has_permissions')
+            ->where('role_has_permissions.role_id', $id)
+            ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
+            ->all();
+    
+        return view('roles.edit', compact('role', 'permission', 'rolePermissions'));
     }
 
     /**
@@ -82,7 +103,19 @@ class roleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            'permission' => 'required',
+        ]);
+    
+        $role = Role::find($id);
+        $role->name = $request->input('name');
+        $role->save();
+    
+        $role->syncPermissions($request->input('permission'));
+    
+        return redirect()->route('roles.index')
+            ->with('success', 'Role updated successfully.');
     }
 
     /**
@@ -93,29 +126,9 @@ class roleController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
-
-    public function remove_permission(){
-
-    }
-
-    public function add_permission(Request $request){
-        $permissions = $request['permission'];
-        $i=0;
-        $rol = $request->role;
-     if ($request['permission']!=0) {
-        for ($i=0; $i <count($request['permission']) ; $i++) { 
-            $permission = (int)$permissions[$i];
+        Role::find($id)->delete();
         
-                role_permission::create([
-                        'role_id'=>$request->role,
-                        'permission_id'=>$permission
-                    ]);
-        } 
-      }else{
-        session()->flash('messageDelete', 'Aucun compte n\'a été attaché au journal');
-      }
-        return redirect(route('role.index'));   
+        return redirect()->route('roles.index')
+            ->with('success', 'Role deleted successfully');
     }
 }

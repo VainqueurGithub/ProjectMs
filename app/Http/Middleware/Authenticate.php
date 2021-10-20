@@ -17,14 +17,15 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
-        if ($request->session()->get('Profil') === null) {
-            if ($request->session()->get('User') === 'User' OR $request->session()->get('User')=='User') {
-                return redirect()->route('index');
+        if (Auth::check()) {
+            //if ($request->session()->get('User') === 'User' OR $request->session()->get('User')=='User') {
+            
+                return $next($request);
 
-            }else{
-               return redirect()->route('Login'); 
-            }
+            // }else{
+            //    return redirect()->route('Login'); 
+            // }
         } 
-        return $next($request);
+        return redirect()->route('index');
     }
 }
