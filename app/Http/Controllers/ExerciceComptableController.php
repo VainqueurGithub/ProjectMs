@@ -18,15 +18,13 @@ class ExerciceComptableController extends Controller
     public function __construct(IRepportage $Repportage){
         $this->Repportage = $Repportage;
         $this->middleware('guest');
-    }
 
-    function __construct()
-    {
-         $this->middleware('permission:exercice-list|exercice-create|exercice-edit|exercice-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:exercice-list|exercice-create|exercice-edit|exercice-delete', ['only' => ['index', 'show']]);
          $this->middleware('permission:exercice-create', ['only' => ['create', 'store']]);
          $this->middleware('permission:exercice-edit', ['only' => ['edit', 'update']]);
          $this->middleware('permission:exercice-delete', ['only' => ['destroy']]);
     }
+
     /**
      * Display a listing of the resource.
      *

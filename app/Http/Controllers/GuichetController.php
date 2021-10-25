@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use DB;
+use App\Models\CompteSubdivisionnaire;
+use App\Models\User;
+use App\Models\guichets;
 class GuichetController extends Controller
 {
     /**
@@ -12,8 +15,16 @@ class GuichetController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
+    {   
+        $guichets = DB::table('guichets')
+                  ->join('users', 'users.id', '=', 'guichets.user_id')
+                  ->join('compte_subdivisionnaires', 'compte_subdivisionnaires.id', '=', 'guichets.comptesubd_id')
+                  ->join('sous_comptes', 'sous_comptes.id', '=', 'guichets.souscompte_id')
+                  ->select(DB::raw('compte_subdivisionnaires.NumeroCompte as csubd, sous_comptes.NumeroCompte scompte,guichets.id, users.name'))
+                  ->get();
+        $Users = User::all();
+        $CompteSubdivisionnaires = CompteSubdivisionnaire::whereEtat(0)->get();         
+        return view('guichets.index', compact('guichets', 'CompteSubdivisionnaires', 'Users'));
     }
 
     /**
@@ -33,8 +44,13 @@ class GuichetController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {   
+       guichets::create([
+           'user_id'=>$request->user,
+           'comptesubd_id'=>$request->guichet,
+           'souscompte_id'=>$request->sc_compte1
+       ]);
+        return back();
     }
 
     /**

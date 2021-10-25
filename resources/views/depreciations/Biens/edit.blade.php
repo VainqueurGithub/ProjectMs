@@ -90,7 +90,7 @@
 
                         <label>Dotations aux amortissements *</label>
                         <div class="form-inline">
-                          <select class="form-control select2" name="Comptabilite1" target="PromoteFirefoxWindowName" onchange="openSComptesPopUp(this); return false;" style="width: 100%">
+                          <select class="form-control select2" target="PromoteFirefoxWindowName" onchange="openSComptesPopUp(this); return false;" style="width: 100%" name="Csubdiv1">
                             @if(!is_null($CompteSubd1))
                             <option value="{{$CompteSubd1->id}}">{{$CompteSubd1->NumeroCompte}} -- {{$CompteSubd1->Intitule}}</option>
                             @endif
@@ -101,23 +101,32 @@
 
                           @if(!is_null($Scomptes1))
                           <input type="text" name="sccomte_int1" value="{{$Scomptes1->NumeroCompte}} -- {{$Scomptes1->Intitule}}" class="form-control" style="border: none;width:80%;" readonly=""><span target="PromoteFirefoxWindowName" onclick="hideSousComptes1(); return false;"><i class="fas fa-trash"></i></span>
+                          @else
+                          <input type="text" name="sccomte_int1" class="form-control" style="border: none;width:80%;" readonly="">
+                          <span target="PromoteFirefoxWindowName" onclick="hideSousComptes1(); return false;"><i class="fas fa-trash"></i></span>
                           @endif
                         </div>
 
                        <div class="col-4" id="sccomte_int1" style="display: none;">
                          @if(!is_null($Scomptes1))
                          <input type="text" name="sc_compte1" id="sc_compte1" value="{{$Scomptes1->id}}" style="display: none;">
+                         <input type="text" id="Csubdiv1" style="display: none;">
+                         @else
+                         <input type="text" name="sc_compte1" id="sc_compte1" style="display: none;">
+                         <input type="text" id="Csubdiv1" style="display: none;">
                          @endif
 
                          @if(!is_null($CompteSubd1))
-                         <input type="text" name="Csubdiv1" id="Csubdiv1" value="{{$CompteSubd1->id}}" style="display: none;">
+                         <input type="text" name="Csubdiv2" id="Csubdiv1" value="{{$CompteSubd1->id}}" style="display: none;">
+                         @else
+                         <input type="text" name="Csubdiv2" id="Csubdiv1" style="display: none;">
                          @endif
                       </div>
 
 
                         <label>Amortissements *</label>
                         <div class="form-inline">
-                          <select class="form-control select2" name="Comptabilite2" target="PromoteFirefoxWindowName" onchange="openSComptesPopUp1(this); return false;" style="width: 100%">
+                          <select class="form-control select2" target="PromoteFirefoxWindowName" onchange="openSComptesPopUp1(this); return false;" style="width: 100%" name="Csubdiv2">
                             @if(!is_null($CompteSubd2))
                             <option value="{{$CompteSubd2->id}}">{{$CompteSubd2->NumeroCompte}} -- {{$CompteSubd2->Intitule}}</option>
                             @endif
@@ -128,15 +137,22 @@
 
                           @if(!is_null($Scomptes2))
                           <input type="text" name="sccomte_int2" value="{{$Scomptes2->NumeroCompte}} -- {{$Scomptes2->Intitule}}" class="form-control" style="border: none;width:80%;" readonly=""><span target="PromoteFirefoxWindowName" onclick="hideSousComptes2(); return false;"><i class="fas fa-trash"></i></span>
+                          @else
+                          <input type="text" name="sccomte_int2" class="form-control" style="border: none;width:80%;" readonly=""><span target="PromoteFirefoxWindowName" onclick="hideSousComptes2(); return false;"><i class="fas fa-trash"></i></span>
                           @endif
                         </div>  
                         
                         <div class="col-4" id="sccomte_int2" style="display: none;">
                           @if(!is_null($Scomptes2))
                          <input type="text" name="sc_compte2" id="sc_compte2" value="{{$Scomptes2->id}}" style="display: none;">
+                         @else
+                         <input type="text" name="sc_compte2" id="sc_compte2" style="display: none;">
                          @endif
-                          @if(!is_null($CompteSubd2))
+
+                        @if(!is_null($CompteSubd2))
                          <input type="text" name="Csubdiv2" id="Csubdiv2" value="{{$CompteSubd2->id}}" style="display: none;">
+                         @else
+                         <input type="text" name="Csubdiv2" id="Csubdiv2" style="display: none;">
                          @endif
 
                             </div>  

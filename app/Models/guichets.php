@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class guichets extends Model
 {
     use HasFactory;
+    protected $fillable = ['user_id', 'comptesubd_id', 'souscompte_id'];
 }

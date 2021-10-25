@@ -20,7 +20,7 @@
  // ROUTE POUR LA PAGE DE CONNEXION MST ET PARTENAIRE
 
 Route::get('/', function () {
-    return view('home');
+    return view('welcome');
 });
 Route::get('/Login', 'PartenaireController@Login')->name('Login');
 

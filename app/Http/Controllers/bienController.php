@@ -6,6 +6,7 @@ use App\Models\Depreciationtype;
 use App\Models\depreciation;
 use App\Models\Journal;
 use App\Models\CompteSubdivisionnaire;
+use App\Models\SousCompte;
 use Illuminate\Http\Request;
 use App\Http\Requests\bienformrequest;
 use Carbon\Carbon;
@@ -55,9 +56,9 @@ class bienController extends Controller
             'Methode'=>$request->Methode,
             'Provenance'=>$request->Provenance,
             'Last_depreciation'=>$request->Misservice,
-            'Compte_subd1'=>$request->Csubdiv1,
+            'Compte_subd1'=>$request->Comptabilite1,
             'Compte_sous1'=>$request->sc_compte1,
-            'Compte_subd2'=>$request->Csubdiv2,
+            'Compte_subd2'=>$request->Comptabilite2,
             'Compte_sous2'=>$request->sc_compte2
         ]);
         return redirect(route('Bien.index'));
@@ -110,12 +111,14 @@ class bienController extends Controller
             ]); 
 
             $depreciation_amount = depreciation::depreciation_amount($id);
-           
+            $depreciation_amount = round($depreciation_amount, 2);
            fputs($ecrire, 1+$i."|");
            fputs($ecrire, $Bien->id."|");
+           fputs($ecrire,number_format($Bien->Montant,session()->get('ExerciceNbreDecimal'),session()->get('ExerciceSeparateurDecimal'),session()->get('ExerciceseparateurMilieu')).' '.session()->get('ExerciceDevise')."|");
            fputs($ecrire, $Bien->Last_depreciation."|");
            fputs($ecrire, $end_date."|");
-           fputs($ecrire, $depreciation_amount."\n");
+           fputs($ecrire,$depreciation_amount."|");
+           fputs($ecrire,number_format($depreciation_amount,session()->get('ExerciceNbreDecimal'),session()->get('ExerciceSeparateurDecimal'),session()->get('ExerciceseparateurMilieu')).' '.session()->get('ExerciceDevise')."\n");
              $j=1;  
          }  
          fclose($ecrire);
@@ -129,7 +132,7 @@ class bienController extends Controller
  
          foreach($lignes as $ligne_num => $ligne) { // on lit le fichier de façon séquentielle
          $array = explode('|', $ligne); // retire le séparateur
-         $DetailD = depreciation::whereBienIdAndDateDebutAndDateFin($array[1],$array[2],$array[3])->first();
+         $DetailD = depreciation::whereBienIdAndDateDebutAndDateFin($array[1],$array[3],$array[4])->first();
 
          if (is_null($DetailD)) {
              $table.="<tr>
@@ -138,6 +141,7 @@ class bienController extends Controller
          <td>". $array[2] ."</td>
          <td>". $array[3] ."</td>
          <td>". $array[4] ."</td>
+         <td>". $array[6] ."</td>
           <td class='center f-icon'>
             <a href='".route('TransfererCompta',$ligne)."'>Transferer</a>
           </td>
@@ -149,15 +153,51 @@ class bienController extends Controller
          <td>". $array[2] ."</td>
          <td>". $array[3] ."</td>
          <td>". $array[4] ."</td>
+         <td>". $array[6] ."</td>
           <td class='center f-icon'>Comptabilisé</td>
          </tr>";
          }
          
     }
   }
-} 
+}  
+
+   //DETAILS DU BIEN
+
+    $B = DB::table('biens')
+         ->join('depreciationtypes', 'depreciationtypes.id', '=', 'biens.Type')
+         ->leftJoin('compte_subdivisionnaires', 'compte_subdivisionnaires.id', '=', 'biens.Type')
+         ->leftJoin('sous_comptes', 'sous_comptes.id', '=', 'biens.Type')
+         ->select(DB::raw('depreciationtypes.Type,biens.Compte_subd1 as AmmortCsubd,biens.Compte_subd2 as DotatCsubd,biens.Compte_sous1 as AmmortSC,biens.Compte_sous2 as DotatSC,biens.Nom,biens.Provenance,biens.Date_acquis,biens.Moyen_acquis,biens.Mis_service,biens.Montant,biens.Duree,biens.Taux,biens.Methode'))
+         ->where('biens.id',$id)
+         ->first();
+ 
+    if ($B->AmmortCsubd!=0) {
+        $AmmortCsubd = CompteSubdivisionnaire::findOrFail($B->AmmortCsubd);
+    }else{
+        $AmmortCsubd = new CompteSubdivisionnaire;
+    }
+
+    if ($B->DotatCsubd!=0) {
+        $DotatCsubd = CompteSubdivisionnaire::findOrFail($B->DotatCsubd);
+    }else{
+        $DotatCsubd = new CompteSubdivisionnaire;
+    }
+
+    if ($B->AmmortSC!=0) {
+        $AmmortSC = SousCompte::findOrFail($B->AmmortSC);
+    }else{
+        $AmmortSC =new SousCompte;
+    }
+
+    if ($B->DotatSC!=0) {
+        $DotatSC = SousCompte::findOrFail($B->DotatSC);
+    }else{
+        $DotatSC =new SousCompte;
+    }
+
         $TableListe = $table;
-        return  view('depreciations/Biens.show', compact('TableListe'));
+        return  view('depreciations/Biens.show', compact('TableListe', 'B','AmmortCsubd','DotatCsubd','AmmortSC', 'DotatSC'));
     }
 
     /**
@@ -243,9 +283,9 @@ class bienController extends Controller
         $array = explode('|', $row);
         depreciation::create([
             'Bien_id'=>$array[1],
-            'Date_debut'=>$array[2],
-            'Date_fin'=>$array[3],
-            'Montant'=>$array[4],
+            'Date_debut'=>$array[3],
+            'Date_fin'=>$array[4],
+            'Montant'=>$array[5],
             'Reported_in'=>session()->get('ExerciceComptableId')
         ]);
         $Bien = $array[1];
@@ -256,7 +296,7 @@ class bienController extends Controller
             'TypeMvt'=>1,
             'Sous_compte'=>$Detail->Compte_sous1,
             'DateOperation'=>date('Y-m-d'),
-            'MD'=>$array[4],
+            'MD'=>$array[5],
             'Libelle'=>'Dotations aux amortissements',
             'Exercice'=>session()->get('ExerciceComptableId')
               ]);
@@ -267,7 +307,7 @@ class bienController extends Controller
             'TypeMvt'=>2,
             'Sous_compte'=>$Detail->Compte_sous2,
             'DateOperation'=>date('Y-m-d'),
-            'MC'=>$array[4],
+            'MC'=>$array[5],
             'Libelle'=>'Amortissements',
             'Exercice'=>session()->get('ExerciceComptableId')
          ]);

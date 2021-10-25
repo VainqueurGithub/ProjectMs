@@ -56,16 +56,16 @@ class CompteSudbivisionnaireController extends Controller
                     session()->flash('messageDelete', 'Ce compte de résultat de perte existe déjà');
                 } 
           }else{
-            if (CompteSubdivisionnaire::UniqueResultatExerciceBenefice()==true){
+            //if (CompteSubdivisionnaire::UniqueResultatExerciceBenefice()==true){
                 CompteSubdivisionnaire::create([
                     'NumeroCompte'=>$request->Numero,
                     'Intitule'=>$request->Intitule,
                     'ComptePricipal'=>$request->Compte,
-                    'resultat_exercice'=>$request->resultat_exercice
+                    'resultat_exercice'=>0
                     ]);
-                }else{
-                    session()->flash('messageDelete', 'Ce compte de résultat de bénéfice existe déjà');
-                }
+                // }else{
+                //     session()->flash('messageDelete', 'Ce compte de résultat de bénéfice existe déjà');
+                // }
           }
         }else{
             session()->flash('messageDelete', 'Ce compte existe déjà');

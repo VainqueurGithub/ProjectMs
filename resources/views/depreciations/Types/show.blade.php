@@ -167,7 +167,7 @@
 
                         <label>Dotations aux amortissements *</label>
                         <div class="form-inline">
-                          <select class="form-control select2" name="Comptabilite1" target="PromoteFirefoxWindowName" onchange="openSComptesPopUp(this); return false;" style="width: 100%">
+                          <select class="form-control select2" target="PromoteFirefoxWindowName" onchange="openSComptesPopUp(this); return false;" style="width: 100%" name="Comptabilite1">
                             <option></option>
                             @foreach($Scomptes as $Scompte)
                              <option value="{{$Scompte->id}}">{{$Scompte->NumeroCompte}} - {{$Scompte->Intitule}}</option>
@@ -185,7 +185,7 @@
 
                         <label>Amortissements *</label>
                         <div class="form-inline">
-                          <select class="form-control select2" name="Comptabilite2" target="PromoteFirefoxWindowName" onchange="openSComptesPopUp1(this); return false;" style="width: 100%">
+                          <select class="form-control select2" target="PromoteFirefoxWindowName" onchange="openSComptesPopUp1(this); return false;" style="width: 100%" name="Comptabilite2">
                             <option></option>
                             @foreach($Scomptes as $Scompte)
                              <option value="{{$Scompte->id}}">{{$Scompte->NumeroCompte}} - {{$Scompte->Intitule}}</option>
