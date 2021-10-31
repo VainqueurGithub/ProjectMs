@@ -19,13 +19,13 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-md-6">
-                                   <form id="sample_form" method="POST" name="{{ route('PostImport') }}" enctype="multipart/form-data" class="form_horizontal">
+                                   <form method="POST" action="{{ route('PostImport') }}" enctype="multipart/form-data" class="form_horizontal">
                                       {{ csrf_field() }}
+                                      {{ method_field('POST') }}
                                        <div class="form-group">
                                             <label>Atacher un fichier Excel au format csv *</label>
                                             <input type="file" class="form-control" name="services" id="file" />
-
-                                            {!! $errors->first('services', '<span class="error">:message</span>') !!}
+                                    {!! $errors->first('services', '<span class="error">:message</span>') !!}
                                         </div>
                                         <div class="form-group">
                                           <input type="hidden" name="hidden_field" value="1"/>
@@ -55,7 +55,7 @@
                                    </ol>
 
                                    <div>
-                                       <img src="{{ url('../../icons/ExempleFicheExcel.png') }}">
+                                      
                                    </div>
                              </div>
 
@@ -94,33 +94,3 @@
         </section>
       </div>
 @endsection 
-
-@section('content2')
-<!-- <script>
-    $(document).ready(function(){
-        var clear_timer;
-        var route = "{{ route('PostImport') }}";
-        $('#sample_form').on('submit', function(event){
-           $('#message').html('');
-           event.preventDefault();
-           $.ajax({
-               url:route,
-               method:"POST",
-               data:new FormData(this),
-               dataType:"json",
-               contentType:false,
-               cache:false,
-               processData:false,
-               success:function(data){
-                   if (data.success) {
-                       $('#total_data').text(data.total_line);
-                   }
-                   if (data.error) {
-                      $('#message').html('<div class="alert alert-danger">'+data.error+'</div>');
-                   }
-               }
-           })
-        });
-    });
-</script> -->
-@endsection

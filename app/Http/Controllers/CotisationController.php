@@ -130,7 +130,7 @@ $NbreCot=Cotisation::where('Etat',0)->count();
         
         if ($CotisationDue !="Not defined") {
            
-        if ($CotisationDue>=$Montant) 
+        if ($Affilier->CotisationM >= $Montant) 
         {
            if ($request->Mois == 1) {
              Cotisation::create([
@@ -517,7 +517,7 @@ $NbreCot=Cotisation::where('Etat',0)->count();
     }
 
     public function PdfCreateCotisation(Request $request)
-    {   $Consomation = Consomation::findOrFail(1);
+    {  
         $Somme = [];
         $Origine = '';
         $Debut = '';
@@ -576,7 +576,7 @@ $NbreCot=Cotisation::where('Etat',0)->count();
                        # code...
         }
         $tableListe=$table;
-        $pdf = PDF::loadView('Cotisations.PdfCreateCotisation', compact('tableListe', 'Somme', 'Origine', 'Debut', 'Fin', 'Individu', 'Consomation'))->setPaper('a3', 'Paysage');
+        $pdf = PDF::loadView('Cotisations.PdfCreateCotisation', compact('tableListe', 'Somme', 'Origine', 'Debut', 'Fin', 'Individu'))->setPaper('a3', 'Paysage');
          $fileName = 'Journal';
          return $pdf->stream($fileName . '.pdf');
 
@@ -634,7 +634,7 @@ $NbreCot=Cotisation::where('Etat',0)->count();
                        # code...
         }
         $tableListe=$table;
-        $pdf = PDF::loadView('Cotisations.PdfCreateCotisation', compact('tableListe', 'Somme', 'Individu', 'Debut', 'Fin', 'Origine', 'Consomation'))->setPaper('a3', 'Paysage');
+        $pdf = PDF::loadView('Cotisations.PdfCreateCotisation', compact('tableListe', 'Somme', 'Individu', 'Debut', 'Fin', 'Origine'))->setPaper('a3', 'Paysage');
          $fileName = 'Journal';
          return $pdf->stream($fileName . '.pdf');
 
@@ -689,7 +689,7 @@ $NbreCot=Cotisation::where('Etat',0)->count();
                        # code...
         }
         $tableListe=$table;
-        $pdf = PDF::loadView('Cotisations.PdfCreateCotisation', compact('tableListe', 'Somme', 'Debut', 'Fin', 'Origine', 'Individu', 'Consomation'))->setPaper('a3', 'Paysage');
+        $pdf = PDF::loadView('Cotisations.PdfCreateCotisation', compact('tableListe', 'Somme', 'Debut', 'Fin', 'Origine', 'Individu'))->setPaper('a3', 'Paysage');
          $fileName = 'Journal';
          return $pdf->stream($fileName . '.pdf');
         }

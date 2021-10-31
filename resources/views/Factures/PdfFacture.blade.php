@@ -24,7 +24,7 @@
         </style>
     </head>
     <body class="no-skin">
-            <div style="text-align: center;"><img src="{{ ('icons/Entete.png') }}" id="LOGO"></div>
+            <div class="header-wrapper"><img src="{{ session()->get('Headerfile') }}" id="LOGO"></div>
         <hr>
         <div style="text-align: left;font-size:10px;font-weight: bold;font-family:Arial Narrow;">
             <p>Partenaire : {{ $Partenaire->Partenaire }}</p>
@@ -82,7 +82,7 @@
          </div> <br /><br /><br /><br /><br />
         
         <hr>
-     <div style="text-align: center;font-size:10px;">{{ $Consomation->Adresse }}
+     <div class="footer-wrapper"><img src="{{url(session()->get('Footerfile'))}}" id="LOGO1"></div>
      </div>      
     </body>
 </html>

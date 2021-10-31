@@ -210,12 +210,14 @@ Route::put('/updateProfil/{User}', 'UtilisateurController@updateProfil')->name('
 
 Route::get('/ListeAffilier/{P}', 'PartenaireController@ListeAffilier')->name('ListeAffilier');
 
-Route::get('graphic', 'TableauDeBordController@graphic')->name('graphic');
+//Route::get('graphic', 'TableauDeBordController@graphic')->name('graphic');
+
 Route::get('consommer', 'TableauDeBordController@consommer')->name('consommer');
 Route::get('ecart', 'TableauDeBordController@ecart')->name('ecart');
 Route::get('dettePart', 'TableauDeBordController@dettePart')->name('dettePart');
 
-
+Route::view("graphic", "TableauDeBord")->name('graphic');
+Route::view("statistic", "TableauDeBord")->name('statistic');
 
 
 Route::post('AyantsDroit/research', 'AyantDroitController@research')->name('researchAyant');
@@ -250,10 +252,10 @@ Route::get('/elaborer_facture', 'FactureController@elaborer_facture')->name('ela
 // ROUTES POUR LE MODULE DE COMPTABILITE
 
  Route::get('/index', 'ComptabiliteController@index')->name('index');
+  Route::resource('Journal', 'JournalController'); 
+ //Route::middleware([ExerciceComptableExist::class])->group(function(){
 
- Route::middleware([ExerciceComptableExist::class])->group(function(){
-
-    Route::resource('Journal', 'JournalController'); 
+    
     Route::get('Balance', 'JournalController@Balance')->name('Balance');
     Route::get('AfficherGdLivre', 'JournalController@AfficherGdLivre')->name('AfficherGdLivre');
     Route::get('AfficherBalance', 'JournalController@AfficherBalance')->name('AfficherBalance');
@@ -265,7 +267,7 @@ Route::get('/elaborer_facture', 'FactureController@elaborer_facture')->name('ela
     Route::get('ResultatPdf', 'JournalController@ResultatPdf')->name('ResultatPdf');
     Route::post('ResultatPdf', 'JournalController@ResultatPdf')->name('ResultatPdf');	 
       
- });
+ //});
 
 Route::resource('ComptePrincipal', 'ComptePrincipalController');
 Route::resource('Comptedivisionnaire', 'CompteSudbivisionnaireController');
@@ -275,10 +277,11 @@ Route::resource('CodeJournaux','CodeJournauxController');
 Route::resource('CompteJournal','CompteJournalController');
 Route::resource('CompteRepport','CompteRepportController');
 Route::resource('Parametre_generaux','ParametreController');
+Route::resource('Repportage','RepportageController');
 
 Route::middleware([InitialBilan::class])->group(function(){
 
-    Route::resource('Repportage','RepportageController');
+    
     Route::get('/uploadinitialbilanform', 'RepportageController@uploadinitialbilanform')->name('uploadinitialbilanform');
     Route::post('file_upload', 'RepportageController@uploadfile')->name('uploadfile');
     
@@ -324,6 +327,8 @@ Route::get('/solde_detail/{account}/{period}', 'SoldeJournalierController@solde_
 Route::resource('SoldeJour', 'SoldeJournalierController');
 
 Route::resource('guichet', 'GuichetController');
+Route::get('Brouillard', 'JournalController@Brouillard')->name('Brouillard'); 
+
 
 //ROUTES POUR LA GESTION DES DROITS D'ACCESS AU SYSTEME MS
     Route::resource('roles', 'RoleController');

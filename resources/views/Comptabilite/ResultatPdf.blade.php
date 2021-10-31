@@ -255,7 +255,7 @@
 
           <div>
           </div>
-          <div class="footer-wrapper"><img src="{{ session()->get('Footerfile') }}" id="LOGO1"></div>
+          <div class="footer-wrapper"><img src="{{url(session()->get('Footerfile'))}}" id="LOGO1"></div>
     </body>
 </html>
 

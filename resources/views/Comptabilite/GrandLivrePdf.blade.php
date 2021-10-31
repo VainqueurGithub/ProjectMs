@@ -49,7 +49,7 @@
         </style>
     </head>
     <body class="no-skin">
-      <div class="header-wrapper"><img src="{{ session()->get('Headerfile') }}" id="LOGO"></div>
+      <div class="header-wrapper"><img src="{{url(session()->get('Headerfile'))}}" id="LOGO"></div>
          
         <div style="font-size:10px; font-weight: bold; font-family: arial; width:50%;">
           <p>Raison Social: <span>{{session()->get('Nom_Societe')}}</span></p>
@@ -81,7 +81,7 @@
 
           <div>
           </div>
-          <div class="footer-wrapper"><img src="{{ session()->get('Footerfile') }}" id="LOGO1"></div>
+          <div class="footer-wrapper"><img src="{{url(session()->get('Footerfile'))}}" id="LOGO1"></div>
     </body>
 </html>
 

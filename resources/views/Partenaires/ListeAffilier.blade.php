@@ -24,7 +24,7 @@
         </style>
     </head>
     <body class="no-skin">
-        <div style="text-align: center;"><img src="{{ ('icons/Entete.png') }}" id="LOGO"></div><hr>
+        <div class="footer-wrapper"><img src="{{url(session()->get('Headerfile'))}}" id="LOGO"></div><hr>
         <h3 style="text-align: center;text-decoration: underline;">LISTE DES AFFILIES ET LEURS NIVEAUX DE COUVERTURE AYANT L'ACCES A {{ $Part->Partenaire }}</h3>
         <table style="font-size: 10px;">
           <thead>
@@ -48,7 +48,7 @@
         </table><br />  
  
      <hr>
-     <div style="text-align: center;">{{ $Consomation->Adresse }}
+     <div class="footer-wrapper"><img src="{{url(session()->get('Footerfile'))}}" id="LOGO1"></div>
      </div>
     </body>
 </html>

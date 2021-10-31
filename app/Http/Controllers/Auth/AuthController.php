@@ -99,7 +99,9 @@ class AuthController extends Controller
             }else{ // CAS OU IL N'Y A PAS 
                 $Exercice = new ExerciceComptable;
             }
-                
+            
+            
+            $request->session()->put('ExerciceComptableId', $Exercice->id);    
             $request->session()->put('ExerciceDevise', $Exercice->Devise);
             $request->session()->put('ExerciceNbreDecimal', $Exercice->NbreDecimal);
             $request->session()->put('ExerciceSeparateurDecimal', $Exercice->separateurDecimal);
@@ -267,10 +269,7 @@ class AuthController extends Controller
         Session::flush();
 
         Auth::logout();
-
-  
-
-        return Redirect('login');
+        return Redirect(route('main_login'));
 
     }
 

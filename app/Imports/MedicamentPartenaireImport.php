@@ -9,11 +9,6 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class MedicamentPartenaireImport implements ToModel, WithHeadingRow
 {
-    /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
     public $Partenaire
     public function model(array $row)
     {   

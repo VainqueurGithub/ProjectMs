@@ -23,7 +23,7 @@
         </style>
     </head>
     <body class="no-skin">
-        <div style="text-align: center;"><img src="{{ ('icons/saat.jpg') }}" id="LOGO"></div>
+        <div><img src="{{ session()->get('Headerfile') }}" id="LOGO"></div><hr>
         @if($Origine !='' AND $Debut !='' AND $Fin !='')
         <h3 style="text-align: center;">JOURNAL DES COTISATION POUR
         {{$Origine->Origine}} DU {{$Debut}} AU {{$Fin}}
@@ -92,7 +92,7 @@
                                     </tfoot>
         </table>  
           <hr>
-       <div style="text-align: center;font-size:10px;">{{ $Consomation->Adresse }}
+       <div><img src="{{url(session()->get('Footerfile'))}}" id="LOGO1"></div>
      </div>       
     </body>
 </html>

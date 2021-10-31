@@ -25,7 +25,7 @@
 
         <div class="form-group">
           <label>Partenaire *</label>
-           <select class="form-control" name="Partenaire">
+           <select class="form-control select2" name="Partenaire">
                <option value="{{ $Partenaire->id }}"> {{ $Partenaire->Code }} / {{ $Partenaire->Partenaire }}</option>
                @foreach($Partenaires as $Partenaire)
                  <option value="{{ $Partenaire->id }}">{{$Partenaire->Code}} / {{$Partenaire->Partenaire}}</option>

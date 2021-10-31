@@ -8,7 +8,14 @@ use App\Models\CompteSubdivisionnaire;
 use App\Models\User;
 use App\Models\guichets;
 class GuichetController extends Controller
-{
+{   
+    function __construct()
+    {
+        $this->middleware('permission:guichet-list|guichet-create|guichet-edit|guichet-delete', ['only' => ['index','store']]);
+        $this->middleware('permission:guichet-create', ['only' => ['create','store']]);
+        $this->middleware('permission:guichet-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:guichet-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *

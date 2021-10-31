@@ -40,7 +40,7 @@ class medicamentPartenaireController extends Controller
     public function store(medicamentPartenaireFormRequest $request)
     {  
         $Today = date('Y-m-d');
-
+        $id = $request->Libelle;
         MedicamentPartenaire::create([
             'medicament'=>$request->Libelle,
             'partenaire'=>$request->Partenaire,
@@ -48,8 +48,8 @@ class medicamentPartenaireController extends Controller
             'code'=>$request->Code,
             'designation'=>$request->Designation
         ]);
-        $id = $request->Libelle;
-        return redirect(route('Medicaments.show', compact('id')));
+        session()->flash('message', 'Prestation ajoutée');
+        return back();
     }
 
     /**
@@ -97,8 +97,8 @@ class medicamentPartenaireController extends Controller
             'designation'=>$request->Designation
         ]);
 
-        $id = $request->Libelle;
-        return redirect(route('Medicaments.show', compact('id')));
+        session()->flash('message', 'Prestation Mis à jour avec succèss');
+        return back();
     }
 
     /**

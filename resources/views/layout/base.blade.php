@@ -372,13 +372,15 @@
                   <p>Plan Comptable</p>
                 </a>
               </li>
-
+             
+             @can('guichet-list')
               <li class="nav-item">
                 <a href="{{ route('Journal.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Journal</p>
                 </a>
               </li>
+             @endcan
 
               <li class="nav-item">
                 <a href="{{ url('plan comptable national revise du Burundi.pdf') }}" class="nav-link">
@@ -471,13 +473,8 @@
                         
             </ul>
           </li>
-
           <li>
-            <a href="{{ route('Medicaments.index')}}"><img src="{{ url('icons/icons8_Pill_48px.png') }}" width="30px" height="30px"> Medicamts & Services </a>
-          </li>
-
-          <li>
-              <a  href="{{ route('Utilisateurs.index')}}"><img src="{{ url('icons/icons8_User_Groups_52px.png') }}" width="30px" height="30px"> Utilisateurs </a>
+              <ion-icon name="log-out-outline"></ion-icon><a  href="{{ route('logout')}}"> Déconnexion </a>
           </li>
         </ul>
       </nav>

@@ -1,43 +1,47 @@
 @extends('layout.base', ['title' => 'Assurance - Ayant Droit'])
 @section('content')
-        <div id="page-wrapper" >
-            <div id="page-inner">
+
+ <div class="content-wrapper">
+    <section class="content-header">
+      <div class="container-fluid">
                <div class="row">
-                  <div class="col-md-8">
-                    <h2 style="color: blue;font-weight: bold;text-align: center;">LISTE DES MEDICAMENTS ET SERVICES</h2>    
-                  </div>
-                  <div class="col-md-4">
-                     
-                            <a href="{{ route('PdfAllMedicaments') }}" target="blank" style="text-decoration: none;color: white">
-                             <div class="btn btn-info pull-right"  style="margin-top: -5px">
+                <div class="col-md-9"></div>
+                  <div class="col-md-3">
+                             <!--a href="{{ route('PdfAllMedicaments') }}" target="blank" class="btn btn-primary">
                             <i class="fa fa-print"></i> Imprimer la Liste 
-                            </a>
+                            </a-->
                         
                   </div>
                 </div>
-               <hr />
-                 <!-- /. ROW  -->
-               <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-default">
-                      @if(session()->get('Profil')=='User')
-                       <div class="panel-heading">
-                             <a href="{{ route('RattacherPartenaire', $id) }}" style="text-decoration: none;color: white">
-                             <div class="btn btn-info pull-right"  style="margin-top: -5px">
-                            <i class="fa fa-plus"></i> Rattacher à un Partaire
-                            </a>
-                        </div><br />
-                      @endif  
-                      <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+             </div>
+           </section>
+
+
+          <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+              <div class="card">
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-md-8"></div>
+                  <div class="col-md-4">
+                     <a href="{{ route('RattacherPartenaire', $id) }}" style="text-decoration: none;color: white">
+                        <div class="btn btn-info pull-right"  style="margin-top: -5px">
+                        <i class="fa fa-plus"></i> Rattacher à un Partaire
+                    </a>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-striped">
                                     <thead>
                                         <tr>
                                             <th>Code</th>
                                             <th>Libellé</th>
                                             <th>Partenaire</th>
                                             <th>Prix</th>
-                                            <th>Date Enregistrement</th>
+                                            <th>Enregistrer le</th>
                                             <th>Changer Prix</th>
                                             <th>Action</th>
                                             <th>Historique</th>
@@ -50,37 +54,34 @@
                                       <td>{{$result->propriete}}</td>
                                       <td>{{$result->Partenaire}}</td>
                                       <td>{{$result->prix}}</td>
-                                      <td>{{$result->created_at}}</td>
+                                      <td>{!! date('d/M/y', strtotime($result->created_at)) !!}</td>
                                       <td><a href="{{route('ChangerPrix',$result->id)}}">Changer Prix</a></td>
                                       <td class="center f-icon">
                             <form action="{{route('medicamentPartenaire.destroy',$result->id)}}" method="POST">
-                            <a href="{{route('medicamentPartenaire.edit',$result->id)}}"><i class="fa fa-pencil"></i></a>
+                            <a href="{{route('medicamentPartenaire.edit',$result->id)}}"><i class="fa fa-edit"></i></a>
                             
                                 {{csrf_field()}}
                                 {{method_field('DELETE')}}
-                                <button><img src="{{url('icons/icons8_Delete_52px.png')}}" width="20px" height="20px">
+                                <button style="border: none;"><i class="fa fa-trash"></i>
                                     </button>
                             </form>
                             
                 </td>
                 <td>
-                    <a href="{{route('Historique',$result->id)}}"><img src="{{url('icons/icons8_Clock_32px.png')}}" width="20px" height="20px"></a>
+                    <a href="{{route('Historique',$result->id)}}"><i class="fa fa-clock"></i></a>
                 </td>
             </tr>
             @endforeach
 
         
                                     </tbody>
-                                </table>
+                               </table>
                             </div>
                         </div>
-                      </div>
-                      </div>
-                     </div>
+                    </div>
+                    <!--End Advanced Tables -->
                 </div>
             </div>
-    </div>
-             <!-- /. PAGE INNER  -->
-            </div>
-         <!-- /. PAGE WRAPPER  -->
+        </section>
+      </div>
 @endsection 

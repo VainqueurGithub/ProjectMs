@@ -18,8 +18,8 @@ class ExerciceComptableExist
     public function handle(Request $request, Closure $next)
     {
         if (Session::has('ExerciceComptableId')) {
-            return $next($request);
+            return back();
         }
-        return back();
+        return $next($request);
     }
 }

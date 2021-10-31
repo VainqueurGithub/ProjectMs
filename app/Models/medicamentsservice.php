@@ -97,6 +97,7 @@ class medicamentsservice extends Model implements IMedicamentservice
           Historiquemedicaments::create([
             'Medicament'=>$Medicament,
             'Prix'=>$medicament->prix,
+            'Debut'=>$medicament->updated_at->format('Y-m-d'),
             'Fin'=>$Today
           ]);  
 

@@ -1,20 +1,24 @@
 @extends('layout.base', ['title' => 'Assurance - Historique Prix'])
 @section('content')
-        <div id="page-wrapper" >
-            <div id="page-inner">
+ <div class="content-wrapper">
+    <section class="content-header">
+      <div class="container-fluid">
                <div class="row">
                   <div class="col-md-12">
-                    <h2 style="color: blue;font-weight: bold;text-align: center;">HISTORIQUE DES PRIX LE MEDICAMENT {{ $medicaments->Code }} / {{ $medicaments->Libelle }}</h2>    
-                  </div>
+                      HISTORIQUE DES PRIX POUR LA PRESTATION {{ $medicaments->code }} / {{ $medicaments->designation }}
+                  </div>  
                 </div>
-               <hr />
-                 <!-- /. ROW  -->
-               <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-default">
-                      <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+             </div>
+           </section>
+
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+              <div class="card">
+              <div class="card-header">
+              <div class="card-body">
+                <table id="example1" class="table table-striped">
                                     <thead>
                                         <tr>
                                             <th>Medicament</th>
@@ -32,15 +36,13 @@
                                       @endforeach
                                     </tbody>
                                 </table>
+                            </table>
                             </div>
                         </div>
-                      </div>
-                      </div>
-                     </div>
+                    </div>
+                    <!--End Advanced Tables -->
                 </div>
             </div>
-    </div>
-             <!-- /. PAGE INNER  -->
-            </div>
-         <!-- /. PAGE WRAPPER  -->
+        </section>
+      </div>
 @endsection 

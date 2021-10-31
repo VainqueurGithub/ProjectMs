@@ -87,7 +87,7 @@ class medicamentsserviceController extends Controller
     {
         $medicament = medicamentsservice::findOrFail($id);
         $Partenaires = Partenaire::whereEtat(0)->get();
-        return view('Medicaments.edit', compact('medicament', 'Partenaire', 'Partenaires'));
+        return view('Medicaments.edit', compact('medicament', 'Partenaires'));
     }
 
     /**
@@ -153,7 +153,6 @@ class medicamentsserviceController extends Controller
 
     //Imprimer la liste medicaments et Services
     public function PdfAllMedicaments(){
-         $Consomation = Consomation::findOrFail(1);
            $medicamentsservice =DB::table('medicamentsservices')
          ->select(DB::raw('medicamentsservices.propriete,medicamentsservices.id, medicamentsservices.created_at'))
          ->get();
@@ -168,16 +167,20 @@ class medicamentsserviceController extends Controller
                     </tr>";
                     }
         $tableListe=$table;
-         $pdf = PDF::loadView('Medicaments.ListingPdf', compact('tableListe', 'Consomation'))->setPaper('a4', 'Paysage');
+         $pdf = PDF::loadView('Medicaments.ListingPdf', compact('tableListe'))->setPaper('a4', 'Paysage');
          $fileName = 'Listing Medicaments';
          return $pdf->stream($fileName . '.pdf');
     }
 
     public function Historique($Med){
        
-       $results = $this->Historique($Med);
-       $medicaments = MedicamentPartenaire::findOrFail($Med);
-       return view('Medicaments.Historique', compact('results', 'medicaments'));
+       $results = DB::table('medicament_partenaires')
+       ->join('historiquemedicaments', 'historiquemedicaments.Medicament', '=', 'medicament_partenaires.id')
+       ->select(DB::raw('medicament_partenaires.code, historiquemedicaments.Prix, historiquemedicaments.Debut, historiquemedicaments.Fin'))
+       ->where('historiquemedicaments.Medicament', $Med)
+       ->get();
+        $medicaments = MedicamentPartenaire::findOrFail($Med);
+        return view('Medicaments.Historique', compact('results', 'medicaments'));
     }
 
     public function Getimport($Partenaire){
@@ -208,35 +211,34 @@ class medicamentsserviceController extends Controller
 
     public function PostImport(Request $request){  
 
-        echo "string";
-       // $this->ExcelImport->uploadService($request);
-       //  return back();
+       $this->ExcelImport->uploadService($request);
+        return back();
        
-       // if (isset($request->hidden_field)) {
-       //     $error = '';
-       //     $total_line = '';
+       if (isset($request->hidden_field)) {
+           $error = '';
+           $total_line = '';
 
-       //     if (is_null($request->services)) {
-       //        $error = 'Please select a file';
-       //     }else{
-       //        $this->ExcelImport->uploadService($request);
-       //     }
+           if (is_null($request->services)) {
+              $error = 'Please select a file';
+           }else{
+              $this->ExcelImport->uploadService($request);
+           }
 
-       //     if ($error='')
-       //     {
-       //        $output = array(
-       //          'error' => $error
-       //        );
-       //     }
-       //     else{
-       //        $output = array(
-       //          'success' => true,
-       //          'total_line' => ($total_line - 1)
-       //        );
-       //     }
-       // }
+           if ($error='')
+           {
+              $output = array(
+                'error' => $error
+              );
+           }
+           else{
+              $output = array(
+                'success' => true,
+                'total_line' => ($total_line - 1)
+              );
+           }
+       }
        
-       // echo json_encode($output);
+       echo json_encode($output);
    }
 
    //Importation des medication cote SAAT

@@ -24,7 +24,7 @@
         </style>
     </head>
     <body class="no-skin">
-        <div style="text-align: center;"><img src="{{ ('icons/saat.jpg') }}" id="LOGO"></div>
+        <div class="header-wrapper"><img src="{{ session()->get('Headerfile') }}" id="LOGO"></div>
         @if($Partenaire !='' AND $Individu !='' AND $Debut !='' AND $Fin !='')
         <h3 style="text-align: center;">JOURNAL DES CONSOMMATIONS POUR
         {{$Partenaire->Partenaire}} /{{$Individu->Code}} DU {{$Debut}} AU {{$Fin}}
@@ -119,7 +119,7 @@
                                     </tfoot>
         </table>
          <hr>
-       <div style="text-align: center;font-size:10px;">{{ $Consomation->Adresse }}
+       <div class="footer-wrapper"><img src="{{url(session()->get('Footerfile'))}}" id="LOGO1"></div>
      </div>          
     </body>
 </html>

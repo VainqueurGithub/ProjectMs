@@ -15,8 +15,19 @@ use\App\Models\CodeJournaux;
 use\App\Models\soldeJournalier;
 use\App\Models\Type;
 use Carbon\Carbon;
+use App\Models\guichets;
+use Illuminate\Support\Facades\Auth;
+
 class JournalController extends Controller
-{
+{   
+    function __construct()
+    {
+        $this->middleware('permission:journal-list|journal-create|journal-edit|journal-delete', ['only' => ['index','store']]);
+        $this->middleware('permission:journal-create', ['only' => ['create','store']]);
+        $this->middleware('permission:journal-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:journal-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,6 +35,7 @@ class JournalController extends Controller
      */
     public function index()
     {   
+      
         $periode = date('Y-m-d');
         $CompteSubdivisionnaires = CompteSubdivisionnaire::whereEtat(0)->get();
         $NewJournal = New Journal;
@@ -44,7 +56,10 @@ class JournalController extends Controller
 
         return view("Comptabilite/Journal.index", compact('NewJournal', 'Journals', 'MD', 'MC','CompteSubdivisionnaires'));
     }
-  
+     
+     public function Brouillard(){
+        return view("Comptabilite/Journal.Brouillard");
+     }
 
       //Impression du Journal sur PDF
 

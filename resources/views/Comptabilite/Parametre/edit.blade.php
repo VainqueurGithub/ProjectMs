@@ -81,14 +81,15 @@
                                         {!! $errors->first('second_banque_number', '<span class="error">:message</span>') !!}    
                                     
                                 
-                                     <label class="control-label">Entete de Vos documents Comptable</label>
+                                     <label class="control-label">Entete de Vos documents</label>
                                        <input type="file" class="form-control form-white" required="" name="entete" value="{{old('entete') ?: $Parametre->entete}}"/>
                                         {!! $errors->first('entete', '<span class="error">:message</span>') !!}
+                                      <img src="{{url($Parametre->entete)}}" class="img-fluid" alt="Inserer L'image d'entete de vos documents">
 
-                                    <label class="control-label">Pied de Page de Vos documents Comptable</label>
+                                    <label class="control-label">Pied de Page de Vos documents</label>
                                        <input type="file" class="form-control form-white" required="" name="footer" value="{{old('footer') ?: $Parametre->footer}}"/>
                                         {!! $errors->first('footer', '<span class="error">:message</span>') !!}        
-                                    
+                                    <img src="{{url($Parametre->footer)}}" class="img-fluid" alt="Inserer L'image de pied de page de vos documents">
                                     </div>
                                       
                                 </div>

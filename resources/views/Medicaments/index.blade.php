@@ -32,7 +32,7 @@
                   <div class="col-md-4">
                      <a href="{{ route('Medicaments.create') }}" style="text-decoration: none;color: white">
                         <div class="btn btn-info pull-right"  style="margin-top: -5px">
-                        <i class="fa fa-plus"></i> Ajouter un Medicament & Service
+                        <i class="fa fa-plus"></i> Ajouter une Prestation
                     </a>
                 </div>
               </div>
@@ -56,16 +56,16 @@
                                           <td>{{$result->id}}</td>
                                           <td>{{$result->propriete}}</td>
                                           <td>{{$result->libelle}}</td> 
-                                          <td>{{$result->created_at}}</td>
+                                          <td>{!! date('d/M/y', strtotime($result->created_at)) !!}</td>
 
                 
                                           <td class="center f-icon">
                                            <form action="{{route('Medicaments.destroy',$result->id)}}"method="POST">
-                            <a href="{{route('Medicaments.edit',$result->id)}}"><i class="fa fa-pencil"></i></a>
+                            <a href="{{route('Medicaments.edit',$result->id)}}"><i class="fa fa-edit"></i></a>
                             
                                 {{csrf_field()}}
                                 {{method_field('DELETE')}}
-                                <button><img src="{{url('icons/icons8_Delete_52px.png')}}" width="20px" height="20px">
+                                <button style="border: none;"><i class="fa fa-trash"></i>
                                 </button>
                             </form>
                             

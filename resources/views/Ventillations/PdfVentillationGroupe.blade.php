@@ -19,7 +19,7 @@
         </style>
     </head>
     <body class="no-skin">
-        <div style="text-align: center;"><img src="{{ ('icons/Entete.png') }}" id="LOGO"></div><hr>
+        <div class="footer-wrapper"><img src="{{url(session()->get('Headerfile'))}}" id="LOGO"></div><hr>
         <h3 style="text-align: center;">VENTILLATION GROUPE</h3>
         <table>
           <thead>
@@ -73,8 +73,7 @@
               </tfoot>
         </table> 
           <hr>
-       <div style="text-align: center;font-size:10px;">{{ $Consomation->Adresse }}
-     </div>           
+       <div class="footer-wrapper"><img src="{{url(session()->get('Footerfile'))}}" id="LOGO1"></div>       
     </body>
 </html>
 

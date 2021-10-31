@@ -24,7 +24,7 @@
         </style>
     </head>
     <body class="no-skin">
-         <div style="text-align: center;"><img src="{{ ('icons/Entete.png') }}" id="LOGO"></div><hr>
+        <div class="header-wrapper"><img src="{{ session()->get('Headerfile') }}" id="LOGO"></div><hr>
         <h3 style="text-align: center;text-decoration: underline;">LISTE DES AFFILIES AYANT COMME ORIGINE {{ $Origine->Origine }}</h3>
         <table>
           <thead>
@@ -65,8 +65,7 @@
          </table><br />  
  
      <hr>
-     <div style="text-align: center;">{{ $Consomation->Adresse }}
-     </div>      
-    </body>
+      <div class="footer-wrapper"><img src="{{url(session()->get('Footerfile'))}}" id="LOGO1"></div>
+     </body>
 </html>
 

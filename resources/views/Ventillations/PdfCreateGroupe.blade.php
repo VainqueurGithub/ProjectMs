@@ -19,7 +19,7 @@
         </style>
     </head>
     <body class="no-skin">
-        <div style="text-align: center;"><img src="{{ ('icons/Entete.png') }}" id="LOGO"></div><hr>
+        <div class="footer-wrapper"><img src="{{url(session()->get('Headerfile'))}}" id="LOGO"></div><hr>
         @if($Debut=='' AND $Fin=='')
         <h3 style="text-align: center;">VENTILLATION PAR GROUPE /{{ $Groupe->Origine }}</h3>
         @else
@@ -101,7 +101,7 @@
             </tfoot>
         </table> 
           <hr>
-       <div style="text-align: center;font-size:10px;">{{ $Consomation->Adresse }}
+       <div class="footer-wrapper"><img src="{{url(session()->get('Footerfile'))}}" id="LOGO1"></div>
      </div>           
     </body>
 </html>

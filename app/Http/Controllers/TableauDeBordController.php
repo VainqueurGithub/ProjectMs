@@ -16,34 +16,16 @@ class TableauDeBordController extends Controller
 
         $NbreCons = Facture::where('Etat', '!=', 2)->whereAnneet($CurentYear)->count('id');
         $MontantCons = Facture::where('Etat', '!=', 2)->whereAnneet($CurentYear)->sum('SAAT');
-        
+         
+        $Taux_croissance = ($MontantCons*100)/$MontantCot;
+
         $ECART = number_format($MontantCot-$MontantCons,2,',',' ');
         $MontantCons = number_format($MontantCons,2,',',' ');
         $MontantCot = number_format($MontantCot,2,',',' ');
-
-        return view('TableauDeBord', compact('NbreCot', 'MontantCot', 'NbreCons', 'MontantCons', 'ECART'));
+        
+        return view('TableauDeBord', compact('NbreCot', 'MontantCot', 'NbreCons', 'MontantCons', 'ECART', 'CurentYear', 'Taux_croissance'));
     }
-    
-    public function graphic(){
-              $CurentYear = date('Y');
-              $comm = DB::table('affiliers')
-                     ->join('cotisations', 'cotisations.Affilier', '=', 'affiliers.id')
-                     ->select(DB::raw('sum(Montant) as sum_sup,Affilier,Nom,Prenom'))
-                     ->where('cotisations.Annee','=',$CurentYear)
-                     ->where('affiliers.Etat', '=', 0)
-                     ->where('cotisations.Etat', '=',0)
-                     ->groupBy('Affilier')
-                     ->orderBy('sum_sup','desc')
-                     ->limit(5)
-                     ->get();
-            $graph="";
-            foreach ($comm as $keyComme) {
-               $graph.=$keyComme->Nom.' '.$keyComme->Prenom."#";
-               $graph.=$keyComme->sum_sup."#";
-            }
-            echo $graph; 
-    }
-
+      
     public function consommer(){
               $CurentYear = date('Y');
               $comm = DB::table('affiliers')

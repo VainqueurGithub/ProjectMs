@@ -14,7 +14,6 @@
         "spatie/laravel-permission": "^5.1",
         "laravel/sanctum": "^2.11",
         "laravelcollective/html": "^6.2"
-        
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

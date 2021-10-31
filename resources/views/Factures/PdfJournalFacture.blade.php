@@ -23,7 +23,8 @@
         </style>
     </head>
     <body class="no-skin">
-        <div style="text-align: center;"><img src="{{ ('icons/saat.jpg') }}" id="LOGO"></div>
+        <div class="header-wrapper"><img src="{{ session()->get('Headerfile') }}" id="LOGO"></div>
+        <hr>
         <h3 style="text-align: center;">JOURNAL DES CONSOMMATIONS</h3>
         <table>
           <thead>
@@ -69,7 +70,8 @@
                                        </tr>
                                        @endforeach
                                     </tfoot>
-        </table>    
+        </table> <hr />
+        <div class="footer-wrapper"><img src="{{url(session()->get('Footerfile'))}}" id="LOGO1"></div>
     </body>
 </html>
 

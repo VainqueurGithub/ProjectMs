@@ -16,7 +16,7 @@ class FileUpload extends Component
 
     public $sample = [];
  
-
+ 
     public function updated($propertyName)
 
     {

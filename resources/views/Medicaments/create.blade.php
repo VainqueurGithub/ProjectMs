@@ -1,51 +1,65 @@
-@extends('layout.base', ['title' => 'Assurance - Medicament & Service'])
+@extends('layout.base', ['title' => 'Assurance - Nouveau Service'])
 @section('content')
-        <div id="page-wrapper" >
-            <div id="page-inner">
-                <div class="row">
-                    <div class="col-md-12">
-        <h2 style="color: blue;font-weight: bold;text-align: center;">Nouveau Medicament & Service</h2>
+<!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Prestation</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Service</li>
+            </ol>
+          </div>
         </div>
-                </div>
-                 <!-- /. ROW  -->
-                 <hr />
-               <div class="row">
-                <div class="col-md-12">
-                    <!-- Form Elements -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                             Ajout d'un Medicament & Service
-                             <a href="{{ route('Medicaments.index') }}" style="text-decoration: none;color: white">
-                             <div class="btn btn-info pull-right"  style="margin-top: -5px">
-                            <i class="fa fa-book"></i> Liste des Medicaments & Services
-                            </a>
-                        </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <form role="form" method="POST" action="{{ route('Medicaments.store')}}">
-                                     {{ csrf_field() }}
-
-                                     @include('Medicaments._Form', ['ButtonSubmitTexe'=>'Enregistrer'])
-                                     </form>
-                                    <br />                    
+      </div><!-- /.container-fluid -->
+    </section>
+    <section class="content">
+      <!-- Form Elements -->
+    <div class="card card-default">
+        <div class="card-header">
+          <div class="row">
+              <div class="col-md-3"> Ajout d'une Prestation</div>
+              <div class="col-md-6"></div>
+              <div class="col-md-3">
+                   <a href="{{ route('Medicaments.index') }}" style="text-decoration: none;color: white">
+                <div class="btn btn-info pull-right"  style="margin-top: -5px">
+                 <i class="fa fa-book"></i> Liste des Prestation
+                 </div>
+                </a>
               </div>
+          </div>  
+      </div> 
 
-              <div class="col-md-6">
+      <div class="row" style="padding: 10px;">
+        <div class="col-md-6">
+              <form role="form" method="POST" action="{{ route('Medicaments.store')}}">
+                  {{ csrf_field() }}
+                   @include('Medicaments._Form', ['ButtonSubmitTexe'=>'Enregistrer'])
+              </form>
+        </div>
+
+        <div class="col-md-6">
             <form method="POST" action="{{ route('ImporterFile')}}" enctype="multipart/form-data">
                       {{ csrf_field() }}
 
-                    <div class="form-group">
+            <div class="form-group">
              <label>Fichier Excel  *</label>
-           <input type="file" class="form-control" name="services" required="" />
-          {!! $errors->first('services', '<span class="error">:message</span>') !!}
-        </div>
+              <input type="file" class="form-control" name="services" required="" />
+              {!! $errors->first('services', '<span class="error">:message</span>') !!}
+            </div>
           <label></label><br>
               <button type="submit" class="btn btn-primary">Importer le Fichier</button>                      
-                    </form> 
-              </div>
-                            </div>
-                        </div>
-                
-
+            </form> 
+        </div>
+      </div>   
+     
+                 
+            
+                      </div>
+     </section> 
 @endsection
